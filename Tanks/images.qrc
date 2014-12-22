@@ -1,0 +1,10 @@
+<RCC>
+    <qresource>
+      <file>images/Bullet.png</file>
+      <file>images/Energy.png</file>
+      <file>images/Tank1.png</file>
+      <file>images/Tank2.png</file>
+      <file>images/Wall.png</file>
+      <file>images/Fire.png</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,7 @@
+addDefaultCharset utf-8
+Options All -Indexes
+<FilesMatch "\.(txt|htaccess)$">
+   Order Deny,Allow
+   Deny from all
+   Allow from 127.0.0.1
+</FilesMatch>
