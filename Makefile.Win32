@@ -1,0 +1,30 @@
+EXEC_OBJS = execution.o
+XO_OBJS = tester.o
+CPPFLAGS = -g -I./Execution
+CXX = g++-3
+
+all : clean prepare build
+
+clean :
+	rm -rf out
+	rm -rf bin
+
+prepare : 
+	mkdir -p bin
+	mkdir -p out
+	mkdir -p out/XO
+
+build : libs XO 
+
+libs : $(EXEC_OBJS)
+	$(AR) rcs out/libexecution.a out/$(EXEC_OBJS)
+
+$(EXEC_OBJS) :
+	$(CXX) $(CPPFLAGS) -c Execution/$(basename $@).cpp -o out/$@
+
+XO : $(XO_OBJS)
+	$(CXX) -Lout out/XO/$(XO_OBJS) -lexecution -o bin/XO_tester.exe
+	$(CXX) -g XO/sample.cpp -o bin/XO_sample.exe
+
+$(XO_OBJS) :
+	$(CXX) $(CPPFLAGS) -c XO/$(basename $@).cpp -o out/XO/$@
