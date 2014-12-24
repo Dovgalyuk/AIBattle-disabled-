@@ -1,0 +1,6 @@
+include_directories(${AIBATTLE_SOURCE_DIR}/Execution)
+link_directories(${AIBATTLE_BINARY_DIR}/Execution)
+add_executable(XO4Tester tester.cpp)
+add_executable(XO4Sample sample.cpp)
+add_executable(XO4Clever clever.cpp)
+target_link_libraries(XO4Tester execution)

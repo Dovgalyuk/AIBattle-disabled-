@@ -1,0 +1,5 @@
+include_directories(${AIBATTLE_SOURCE_DIR}/Execution)
+link_directories(${AIBATTLE_BINARY_DIR}/Execution)
+add_executable(XOTester tester.cpp)
+add_executable(XOSample sample.cpp)
+target_link_libraries(XOTester execution)

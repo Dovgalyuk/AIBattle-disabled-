@@ -1,5 +1,6 @@
 #include <iostream>
 #include <time.h>
+#include <stdlib.h>
 
 bool occ[8][8];
 
