@@ -18,7 +18,7 @@
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')    
             $compileArr = array('cpp' => 'cl.bat', 'vb' => 'vbcl.bat', 'pas' => 'fpc.bat');
         else
-            $compileArr = array('cpp' => './gcc.sh');
+            $compileArr = array('cpp' => './gcc.sh', 'c' => './gcc.sh');
 		
 		$output = array();
 		$execValue = 0;
