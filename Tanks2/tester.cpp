@@ -548,11 +548,11 @@ int main(int argc, char **argv)
         {
             if (result1 != ER_OK)
             {
-                printLog(true, result1, "");
+                printLog(true, result1, output1);
             }
             if (result2 != ER_OK)
             {
-                printLog(false, result2, "");
+                printLog(false, result2, output2);
             }
             if (result1 != ER_OK && result2 != ER_OK)
             {

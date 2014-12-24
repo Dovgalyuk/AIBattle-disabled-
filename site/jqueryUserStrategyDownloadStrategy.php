@@ -16,7 +16,7 @@
 		saveFileOnDisc2(addslashes("./executions/").$strategy, $fileInputName);
 	    
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')    
-            $compileArr = array('cpp' => 'cl.bat', 'vb' => 'vbcl.bat', 'pas' => 'fpc.bat');
+            $compileArr = array('cpp' => 'cl.bat', 'c' => 'cl.bat', 'vb' => 'vbcl.bat', 'pas' => 'fpc.bat');
         else
             $compileArr = array('cpp' => './gcc.sh', 'c' => './gcc.sh');
 		
