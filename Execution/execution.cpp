@@ -176,7 +176,9 @@ void printLog(bool first, ExecutionResult result, const std::string &output)
         std::cout << (first ? 1 : 2);
         break;
     case ER_TIE:
+        break;
     case ER_IE:
+        std::cout << " " << output << "\n";
         break;
     default:
         break;
