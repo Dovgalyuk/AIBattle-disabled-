@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 project(AIBATTLE)
 add_subdirectory(Execution)
+add_subdirectory(Visualizer)
 add_subdirectory(BattleShips)
 add_subdirectory(Kamisado)
 add_subdirectory(Maxit)

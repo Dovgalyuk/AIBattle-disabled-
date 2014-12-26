@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 2.8.11)
+set(CMAKE_AUTOMOC ON)
+find_package(Qt4)
+include(${QT_USE_FILE}) 
+add_library(visualizer BaseGameUi.cpp LogChooser.cpp)
+target_link_libraries(visualizer ${QT_LIBRARIES})
