@@ -1,7 +1,7 @@
 #ifndef GAMEUI_H
 #define GAMEUI_H
 
-#include <QColor.h>
+#include <QColor>
 #include "BaseGameUi.h"
 
 const QColor colors[8] = {QColor(80, 40, 0), Qt::green, Qt::red, Qt::yellow, Qt::magenta, Qt::cyan, Qt::blue, QColor(255, 148, 0)};

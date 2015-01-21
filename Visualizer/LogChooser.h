@@ -1,7 +1,7 @@
 #ifndef LOGCHOOSER_H
 #define LOGCHOOSER_H
 
-#include <QGroupbox>
+#include <QGroupBox>
 #include <QString>
 #include <QLabel>
 #include <QPushButton>

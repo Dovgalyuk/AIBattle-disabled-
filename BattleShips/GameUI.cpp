@@ -1,5 +1,5 @@
-#include <QColor.h>
-#include <QPen.h>
+#include <QColor>
+#include <QPen>
 #include "GameUI.h"
 
 GameUI::GameUI(const QString& gameName, QSize fieldSize)

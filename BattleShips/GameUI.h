@@ -1,7 +1,7 @@
 #ifndef GAMEUI_H
 #define GAMEUI_H
 
-#include <QMap.h>
+#include <QMap>
 #include "BaseGameUi.h"
 
 enum Cell

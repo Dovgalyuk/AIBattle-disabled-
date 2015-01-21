@@ -2,18 +2,18 @@
 #define BASEGAMEUI_H
 
 #include <QWidget>
-#include <QMainwindow>
+#include <QMainWindow>
 #include <QLabel>
-#include <QPushbutton>
+#include <QPushButton>
 #include <QPainter>
 #include <QLayout>
-#include <QTextstream>
-#include <QMessagebox>
+#include <QTextStream>
+#include <QMessageBox>
 #include <QEvent>
 #include <QTimer>
 #include <QScrollBar>
 #include <QString>
-#include "logchooser.h"
+#include "LogChooser.h"
 
 struct LogItem
 {

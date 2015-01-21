@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <queue>
+#include <stdlib.h>
 
 std::vector<std::string> field;
 
