@@ -38,7 +38,7 @@
 		?>
 
 		<?php
-			if (getActiveUser() != -1)
+			if (getActiveUserID() != -1)
 			{
 		?>
 			<br>

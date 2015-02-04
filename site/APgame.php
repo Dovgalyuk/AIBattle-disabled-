@@ -14,7 +14,7 @@
 			
 		$gameList 		= getGameList();
 		$currentGame 	= getGameList($gameId);
-		$vizualize		= @hasVisualizer($gameId);
+		$vizualize		= @getVisualizerByGame($gameId);
 ?>
 
 	<script>

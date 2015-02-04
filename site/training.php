@@ -23,7 +23,7 @@
     $gameId = intval($_GET['id']);
 ?>
 <?php
-	if (getActiveUser() != -1)
+	if (getActiveUserID() != -1)
 	{
 ?>
 	        <h3>Тренировочные партии</h3>
@@ -32,7 +32,7 @@
 	}
 ?>
 <?php
-    if (getCurrentStrategy(getActiveUser(), $tournamentId) != null) 
+    if (getCurrentStrategy(getActiveUserID(), $tournamentId) != null) 
     {
 ?>
         <h3>Сыграть с участниками</h3>

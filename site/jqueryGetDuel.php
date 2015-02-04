@@ -14,7 +14,7 @@
     
     if (isset($method) && isset($user1) && isset($user2))
     {
-        echo getUserName($user1).'&'.getUserName($user2);
+        echo getNicknameById($user1).'&'.getNicknameById($user2);
         exit();
     }
     

@@ -41,7 +41,7 @@
 			<td>Счет</td>
 		</tr>
 		<?php
-			//$activeUser = getActiveUser();
+			//$activeUser = getActiveUserID();
 			for ($i = 0 ; $i < count($names) ; ++$i)
 			{
 		?>

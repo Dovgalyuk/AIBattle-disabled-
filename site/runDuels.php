@@ -125,7 +125,7 @@
 						}
 					}
 					$log = fopen("./logs/" . $row['id'] . ".txt", "w");
-					fwrite($log, "PLAYERS\n" . getUserNameByStrategy($row['strategy1']) . "\n" . getUserNameByStrategy($row['strategy2']) . "\n");
+					fwrite($log, "PLAYERS\n" . getNicknameByStrategy($row['strategy1']) . "\n" . getNicknameByStrategy($row['strategy2']) . "\n");
 					foreach ($output as $line)
 					{
 						fwrite($log, $line . "\n");

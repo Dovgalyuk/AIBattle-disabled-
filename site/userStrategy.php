@@ -42,7 +42,7 @@
     $_SESSION['tournamentState'] = 'userStrategy.php';	
     $user = (isAdmin() && isset($_GET['uid']))
                 ? intval($_GET['uid'])
-                : getActiveUser();
+                : getActiveUserID();
     $strategies = getUserStrategies($id, $user, $tournamentId, false);
     $page = isset($_GET['page'])
                 ? intval($_GET['page'])
@@ -53,7 +53,7 @@
         $page = sizeof($strategies) / 10;
 ?>
 <?php
-    if (getActiveUser() == $user && $tournamentRunning)
+    if (getActiveUserID() == $user && $tournamentRunning)
     {
 ?>
 <h2>Добавить новую стратегию</h2>
@@ -78,14 +78,14 @@
           echo $id; ?>&tournament=<?php echo $tournamentId;?>&uid='+$('#userSelect').val());">
         <option
 <?php
-            if (getActiveUser() == $user)
+            if (getActiveUserID() == $user)
             {
 ?>
             selected
 <?php
             }
 ?>
-            value="<?php echo getActiveUser(); ?>">
+            value="<?php echo getActiveUserID(); ?>">
             <?php echo getNicknameById($user); ?>
         </option>
 <?php
@@ -136,7 +136,7 @@ if (!isset($_GET['page']))
         <td align=center>Статус</td>
         <td align=center>Код</td>
 <?php 
-        if (getActiveUser() == $user && $tournamentRunning)
+        if (getActiveUserID() == $user && $tournamentRunning)
         { 
 ?>
             <td align=center>Изменение активной стратегии</td>
@@ -159,7 +159,7 @@ if (!isset($_GET['page']))
 				</div>
             </td>
 <?php
-    if (getActiveUser() == $user && $tournamentRunning)
+    if (getActiveUserID() == $user && $tournamentRunning)
     {
 ?>
 			<td align=center>

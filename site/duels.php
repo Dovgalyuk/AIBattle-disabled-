@@ -11,9 +11,9 @@
     $_SESSION['tournamentDuel'] = $roundId;
 	
     $gameId = intval($_GET['game']);
-    $userId = (isAdmin() && isset($_GET['uid'])) ? intval($_GET['id']) : getActiveUser();
+    $userId = (isAdmin() && isset($_GET['uid'])) ? intval($_GET['id']) : getActiveUserID();
     $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
-    $visual = hasVisualizer($gameId);
+    $visual = getVisualizerByGame($gameId);
     $tournamentId = intval($_GET['tournament']);
 	
     $duels = getDuels($roundId, $gameId, $userId, $tournamentId, $page * 10, 10);

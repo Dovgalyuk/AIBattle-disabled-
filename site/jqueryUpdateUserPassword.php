@@ -1,6 +1,6 @@
 <?php
 	include_once('procedures.php');
-		$val = changePassword($_POST['newPassword'], (isAdmin() && isset($_GET['id']))?$_GET['id']:getActiveUser());
+		$val = changePassword($_POST['newPassword'], (isAdmin() && isset($_GET['id']))?$_GET['id']:getActiveUserID());
 		switch ($val)
 		{
 			case 0:

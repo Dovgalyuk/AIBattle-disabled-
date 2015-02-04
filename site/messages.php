@@ -7,7 +7,7 @@
         if (isset($messages[$id]))
         {
             $msg = $messages[$id];
-            if ($msg['recevier'] == getActiveUser())
+            if ($msg['recevier'] == getActiveUserID())
                 markMessageAsViewed($id);
 ?>
 

@@ -35,7 +35,7 @@
 <?php
     if (isActiveUser())
     {
-        $id = getActiveUser();
+        $id = getActiveUserID();
         $messages = getUserMessages();
 ?>
 <br />

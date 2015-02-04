@@ -23,8 +23,8 @@
 			$roundList = getRoundList($tournamentId);
 		
 		$gameId = getGameByTournament($tournamentId);
-		$duels = getDuels($roundId, $gameId, getActiveUser(), $tournamentId);
-		$visual = @hasVisualizer($gameId);
+		$duels = getDuels($roundId, $gameId, getActiveUserID(), $tournamentId);
+		$visual = @getVisualizerByGame($gameId);
 ?>
 
 	<script>
