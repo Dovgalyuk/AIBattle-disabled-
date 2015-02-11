@@ -59,7 +59,7 @@
 					type: 'POST',
 					success: function (data)
 					{	
-						alert(data);
+						showModalAlert(data);
 						loadGameData(gameSelectorValue);
 					},
 					data: form,
@@ -68,7 +68,7 @@
 					processData: false
 				});
 			}
-			else alert('Название игры не может быть пустым!');
+			else showModalAlert('Название игры не может быть пустым!');
 		}
 		
 		function deleteVisualizer()
@@ -85,7 +85,7 @@
 				},
 				function (data)
 				{
-					alert(data);
+					showModalAlert(data);
 					loadGameData(gameSelectorValue);
 				}
 			);
@@ -105,7 +105,7 @@
 				},
 				function (data)
 				{
-					alert(data);
+					showModalAlert(data);
 					loadGameData(-1);
 				}
 			);

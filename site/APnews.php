@@ -72,12 +72,12 @@
 					newsData,
 					function (data)
 					{
-						alert(data);
+						showModalAlert(data);
 						loadNewsData(currentNews);
 					}
 				);
 			}
-			else alert('Заголовок новости не должен быть пустым!');
+			else showModalAlert('Заголовок новости не должен быть пустым!');
 		}
 		
 		function deleteNews()
@@ -93,7 +93,7 @@
 				},
 				function (data)
 				{
-					alert(data);
+					showModalAlert(data);
 					loadNewsData(-1);
 				}
 			);

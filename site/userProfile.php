@@ -51,7 +51,7 @@
 			{ 'newPassword' : $("#newPassword").val()},
 			function(data) 
 			{
-				alert(data);
+				showModalAlert(data);
 				window.location.reload();
 			}
 		)
@@ -70,7 +70,7 @@
         },
         function (data)
         {
-            alert(data);
+            showModalAlert(data);
             window.location.reload();
         }
     )

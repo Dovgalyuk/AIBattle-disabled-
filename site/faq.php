@@ -10,7 +10,7 @@
 			{'userQuestion' : CKEDITOR.instances.userQuestion.getData()},
 			function (data)
 			{
-				alert(data);
+				showModalAlert(data);
 				window.location.reload();
 			}
 		);

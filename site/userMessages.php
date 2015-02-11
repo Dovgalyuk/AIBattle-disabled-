@@ -25,7 +25,7 @@
             },
             function (data)
             {
-                alert(data);
+                showModalAlert(data);
                 window.location.reload();
             } 
         );

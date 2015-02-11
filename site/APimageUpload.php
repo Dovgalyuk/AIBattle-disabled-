@@ -19,7 +19,7 @@
 		$(window).load(function() 
 		{ 
 			//console.log(document);
-			//alert(document.getElementById('imageDescription'));
+			//showModalAlert(document.getElementById('imageDescription'));
 			var gameSelector = document.getElementById('gameSelectorDiv');
 			gameSelector.style.display = 'none';
 		})
@@ -43,12 +43,12 @@
 		function loadFormData()
 		{
 			if (!$('#uploadImage')[0].files[0])
-				alert('Нет выбранного изображения!');
+				showModalAlert('Нет выбранного изображения!');
 			else 
 			{
 				var imageExtension = $('#uploadImage')[0].files[0].name.split('.').pop();
 				if (imageExtension != 'jpg' && imageExtension != 'jpeg' && imageExtension != 'png')
-					alert('Поддерживаемые расширения изображений: jpeg/png');
+					showModalAlert('Поддерживаемые расширения изображений: jpeg/png');
 				else
 				{
 					var typeSelector = document.getElementById('typeSelector');
@@ -80,7 +80,7 @@
 						processData: false,
 						success: function ()
 						{	
-							alert('Изображение успешно загружено!');
+							showModalAlert('Изображение успешно загружено!');
 						}
 					});
 				}

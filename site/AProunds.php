@@ -141,7 +141,7 @@
 					data,
 					function (data)
 					{
-						alert(data);
+						showModalAlert(data);
 						if (roundId == -1)
 						{
 							$.post
@@ -160,14 +160,14 @@
 					}
 				);
 			}
-			else alert('Название раунда не может быть пустым!')
+			else showModalAlert('Название раунда не может быть пустым!')
 		}
 		
 		function loadFormData()
 		{
 			var roundId = getSelectedRound();
             restartPage(roundId == -1 ? 'createRound' : 'updateRound');
-            alert("Всё хорошо!");
+            showModalAlert("Всё хорошо!");
             window.location.reload();
 		}
 		

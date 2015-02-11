@@ -81,7 +81,7 @@
 					type: 'POST',
 					success: function (data)
 					{	
-						alert(data);
+						showModalAlert(data);
 						loadCheckerData(checkerId, gameId);
 					},
 					data: form,
@@ -90,7 +90,7 @@
 					processData: false
 				});
 			}
-			else alert('Название тестировщика не должно быть пустым!');
+			else showModalAlert('Название тестировщика не должно быть пустым!');
 		}
 		
 		function deleteChecker()
@@ -105,7 +105,7 @@
 				},
 				function (data) 
 				{
-					alert(data);
+					showModalAlert(data);
 					if (data.indexOf('Checker') != -1)
 						loadCheckerData(-1);
 					else
