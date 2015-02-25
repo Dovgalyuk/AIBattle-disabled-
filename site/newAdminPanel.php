@@ -57,40 +57,101 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="/"><span class="glyphicon glyphicon-arrow-left"></span> AiBattle</a>
+          <a class="navbar-brand" href="/"><span class="glyphicon glyphicon-chevron-left"></span> AiBattle</a>
         </div>
       </div>
     </nav>
+        <script>
+            function changeSidebar(id)
+            {
+                $("#main-sidebar").fadeOut(400)
+                $("#sub-sidebar").fadeIn(400)
+                $("#submenu-items").html("")
+                if (id == "news")
+                {
+                    $("#submenu-items").html("<?php
+    $news = getNewsData();
+    foreach ($news as $data)
+    {
+        echo "<li><a href=\\\"?page=news&subpage=" . $data['id'] . "\\\">" . $data['header'] . "</a></li>";
+    }
+?><li class=\"divider\"></li><li><a href=\"?page=news&subpage=-1\"><span class=\"glyphicon glyphicon-plus\"></span> Новая новость</a></li>")
+                }
+                if (id == "games")
+                {
+                    $("#submenu-items").html("<?php
+    $games = getGameList();
+    foreach ($games as $data)
+    {
+        echo "<li><a href=\\\"?page=news&subpage=" . $data['id'] . "\\\">" . $data['name'] . "</a></li>";
+    }
+?><li class=\"divider\"></li><li><a href=\"?page=news&subpage=-1\"><span class=\"glyphicon glyphicon-plus\"></span> Новая игра</a></li>")
+                }
+                if (id == "checkers")
+                {
+                    $("#submenu-items").html("<?php
+    $checkers = getCheckerList();
+    foreach ($checkers as $data)
+    {
+        echo "<li><a href=\\\"?page=news&subpage=" . $data['id'] . "\\\">" . $data['name'] . "</a></li>";
+    }
+?><li class=\"divider\"></li><li><a href=\"?page=news&subpage=-1\"><span class=\"glyphicon glyphicon-plus\"></span> Новый чекер</a></li>")
+                }
+                if (id == "games")
+                {
+                    $("#submenu-items").html("<?php
+    $games = getGameList();
+    foreach ($games as $data)
+    {
+        echo "<li><a href=\\\"?page=news&subpage=" . $data['id'] . "\\\">" . $data['name'] . "</a></li>";
+    }
+?><li class=\"divider\"></li><li><a href=\"?page=news&subpage=-1\"><span class=\"glyphicon glyphicon-plus\"></span> Новая игра</a></li>")
+                }
+
+            }
+            function restoreSidebar()
+            {
+                $("#main-sidebar").fadeIn(400)
+                $("#sub-sidebar").fadeOut(400)
+            }
+        </script>
 <div id="wrapper">
     <div id="sidebar-wrapper">
-    <ul class="sidebar-nav">
-    <li class="<?php echo ($page == 'news')?'active':'' ?>">
-    <a href="?page=news"><?php echo getRusTitle("news"); ?></a>
+    <ul class="sidebar-nav" id="main-sidebar">
+    <li onclick="changeSidebar('news')" class="<?php echo ($page == 'news')?'active':'' ?>">
+    <a href="#"><?php echo getRusTitle("news"); ?></a>
     </li>
-    <li class="<?php echo ($page == 'games')?'active':'' ?>">
-    <a href="?page=games"><?php echo getRusTitle("games"); ?></a>
+    <li onclick="changeSidebar('games')" class="<?php echo ($page == 'games')?'active':'' ?>">
+    <a href="#"><?php echo getRusTitle("games"); ?></a>
     </li>
-    <li class="<?php echo ($page == 'checkers')?'active':'' ?>">
-    <a href="?page=checkers"><?php echo getRusTitle("checkers"); ?></a>
+    <li onclick="changeSidebar('checkers')" class="<?php echo ($page == 'checkers')?'active':'' ?>">
+    <a href="#"><?php echo getRusTitle("checkers"); ?></a>
     </li>
-    <li class="<?php echo ($page == 'files')?'active':'' ?>">
-    <a href="?page=files"><?php echo getRusTitle("files"); ?></a>
+    <li onclick="changeSidebar('files')" class="<?php echo ($page == 'files')?'active':'' ?>">
+    <a href="#"><?php echo getRusTitle("files"); ?></a>
     </li>
-    <li class="<?php echo ($page == 'duels')?'active':'' ?>">
-    <a href="?page=duels"><?php echo getRusTitle("duels"); ?></a>
+    <li onclick="changeSidebar('duels')" class="<?php echo ($page == 'duels')?'active':'' ?>">
+    <a href="#"><?php echo getRusTitle("duels"); ?></a>
     </li>
-    <li class="<?php echo ($page == 'images')?'active':'' ?>">
-    <a href="?page=images"><?php echo getRusTitle("images"); ?></a>
+    <li onclick="changeSidebar('images')" class="<?php echo ($page == 'images')?'active':'' ?>">
+    <a href="#"><?php echo getRusTitle("images"); ?></a>
     </li>
-    <li class="<?php echo ($page == 'rounds')?'active':'' ?>">
-    <a href="?page=rounds"><?php echo getRusTitle("rounds"); ?></a>
+    <li onclick="changeSidebar('rounds')" class="<?php echo ($page == 'rounds')?'active':'' ?>">
+    <a href="#"><?php echo getRusTitle("rounds"); ?></a>
     </li>
-    <li class="<?php echo ($page == 'users')?'active':'' ?>">
-    <a href="?page=users"><?php echo getRusTitle("users"); ?></a>
+    <li onclick="changeSidebar('users')" class="<?php echo ($page == 'users')?'active':'' ?>">
+    <a href="#"><?php echo getRusTitle("users"); ?></a>
     </li>
-    <li class="<?php echo ($page == 'faq')?'active':'' ?>">
-    <a href="?page=faq"><?php echo getRusTitle("faq"); ?></a>
+    <li onclick="changeSidebar('faq')" class="<?php echo ($page == 'faq')?'active':'' ?>">
+    <a href="#"><?php echo getRusTitle("faq"); ?></a>
     </li>
+    </ul>
+    <ul style="display:none" id="sub-sidebar" class="sidebar-nav">
+    <li>
+    <a href="#" onclick="restoreSidebar()"><span class="glyphicon glyphicon-chevron-left"></span> Назад</a>
+    </li>
+    <span id="submenu-items">
+    </span>
     </ul>
     </div>
 <div id="page-content-wrapper">
@@ -120,9 +181,6 @@
     if ($query = mysqli_query($link, "SELECT * FROM users"))
     {
 ?>
-	<script>
-		changeActiveAdminButton('usersButton');
-	</script>
 
 <table class="table table-hover">
 <caption>Пользователи</caption>
@@ -158,7 +216,12 @@
 </tbody>
 </table>
 <?php
-}}
+    }};
+    if ($page == "news")
+    {
+?>
+<?php
+    }
 ?>
 </div>
 </div>
