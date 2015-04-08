@@ -1,6 +1,7 @@
 <?php
     include_once("procedures.php");
-    $page = $_GET["page"] or "";
+    $page = $_GET["page"] or null;
+    $subpage = $_GET["subpage"] or null;
     function getRusTitle($p)
     {
         if ($p == "news") return "Новости";
@@ -16,6 +17,8 @@
     }
     if (isAdmin())
     {
+        $link = getDBConnection();
+        mysqli_select_db($link, getDBName());
 ?>
 
 <html>
@@ -61,97 +64,36 @@
         </div>
       </div>
     </nav>
-        <script>
-            function changeSidebar(id)
-            {
-                $("#main-sidebar").fadeOut(400)
-                $("#sub-sidebar").fadeIn(400)
-                $("#submenu-items").html("")
-                if (id == "news")
-                {
-                    $("#submenu-items").html("<?php
-    $news = getNewsData();
-    foreach ($news as $data)
-    {
-        echo "<li><a href=\\\"?page=news&subpage=" . $data['id'] . "\\\">" . $data['header'] . "</a></li>";
-    }
-?><li class=\"divider\"></li><li><a href=\"?page=news&subpage=-1\"><span class=\"glyphicon glyphicon-plus\"></span> Новая новость</a></li>")
-                }
-                if (id == "games")
-                {
-                    $("#submenu-items").html("<?php
-    $games = getGameList();
-    foreach ($games as $data)
-    {
-        echo "<li><a href=\\\"?page=news&subpage=" . $data['id'] . "\\\">" . $data['name'] . "</a></li>";
-    }
-?><li class=\"divider\"></li><li><a href=\"?page=news&subpage=-1\"><span class=\"glyphicon glyphicon-plus\"></span> Новая игра</a></li>")
-                }
-                if (id == "checkers")
-                {
-                    $("#submenu-items").html("<?php
-    $checkers = getCheckerList();
-    foreach ($checkers as $data)
-    {
-        echo "<li><a href=\\\"?page=news&subpage=" . $data['id'] . "\\\">" . $data['name'] . "</a></li>";
-    }
-?><li class=\"divider\"></li><li><a href=\"?page=news&subpage=-1\"><span class=\"glyphicon glyphicon-plus\"></span> Новый чекер</a></li>")
-                }
-                if (id == "games")
-                {
-                    $("#submenu-items").html("<?php
-    $games = getGameList();
-    foreach ($games as $data)
-    {
-        echo "<li><a href=\\\"?page=news&subpage=" . $data['id'] . "\\\">" . $data['name'] . "</a></li>";
-    }
-?><li class=\"divider\"></li><li><a href=\"?page=news&subpage=-1\"><span class=\"glyphicon glyphicon-plus\"></span> Новая игра</a></li>")
-                }
-
-            }
-            function restoreSidebar()
-            {
-                $("#main-sidebar").fadeIn(400)
-                $("#sub-sidebar").fadeOut(400)
-            }
-        </script>
 <div id="wrapper">
     <div id="sidebar-wrapper">
     <ul class="sidebar-nav" id="main-sidebar">
-    <li onclick="changeSidebar('news')" class="<?php echo ($page == 'news')?'active':'' ?>">
-    <a href="#"><?php echo getRusTitle("news"); ?></a>
+    <li class="<?php echo ($page == 'news')?'active':'' ?>">
+    <a href="?page=news"><?php echo getRusTitle("news"); ?></a>
     </li>
-    <li onclick="changeSidebar('games')" class="<?php echo ($page == 'games')?'active':'' ?>">
-    <a href="#"><?php echo getRusTitle("games"); ?></a>
+    <li class="<?php echo ($page == 'games')?'active':'' ?>">
+    <a href="?page=games"><?php echo getRusTitle("games"); ?></a>
     </li>
-    <li onclick="changeSidebar('checkers')" class="<?php echo ($page == 'checkers')?'active':'' ?>">
-    <a href="#"><?php echo getRusTitle("checkers"); ?></a>
+    <li class="<?php echo ($page == 'checkers')?'active':'' ?>">
+    <a href="?page=checkers"><?php echo getRusTitle("checkers"); ?></a>
     </li>
-    <li onclick="changeSidebar('files')" class="<?php echo ($page == 'files')?'active':'' ?>">
-    <a href="#"><?php echo getRusTitle("files"); ?></a>
+    <li class="<?php echo ($page == 'files')?'active':'' ?>">
+    <a href="?page=files"><?php echo getRusTitle("files"); ?></a>
     </li>
-    <li onclick="changeSidebar('duels')" class="<?php echo ($page == 'duels')?'active':'' ?>">
-    <a href="#"><?php echo getRusTitle("duels"); ?></a>
+    <li class="<?php echo ($page == 'duels')?'active':'' ?>">
+    <a href="?page=duels"><?php echo getRusTitle("duels"); ?></a>
     </li>
-    <li onclick="changeSidebar('images')" class="<?php echo ($page == 'images')?'active':'' ?>">
-    <a href="#"><?php echo getRusTitle("images"); ?></a>
+    <li class="<?php echo ($page == 'images')?'active':'' ?>">
+    <a href="?page=images"><?php echo getRusTitle("images"); ?></a>
     </li>
-    <li onclick="changeSidebar('rounds')" class="<?php echo ($page == 'rounds')?'active':'' ?>">
-    <a href="#"><?php echo getRusTitle("rounds"); ?></a>
+    <li class="<?php echo ($page == 'rounds')?'active':'' ?>">
+    <a href="?page=rounds"><?php echo getRusTitle("rounds"); ?></a>
     </li>
-    <li onclick="changeSidebar('users')" class="<?php echo ($page == 'users')?'active':'' ?>">
-    <a href="#"><?php echo getRusTitle("users"); ?></a>
+    <li class="<?php echo ($page == 'users')?'active':'' ?>">
+    <a href="?page=users"><?php echo getRusTitle("users"); ?></a>
     </li>
-    <li onclick="changeSidebar('faq')" class="<?php echo ($page == 'faq')?'active':'' ?>">
-    <a href="#"><?php echo getRusTitle("faq"); ?></a>
+    <li class="<?php echo ($page == 'faq')?'active':'' ?>">
+    <a href="?page=faq"><?php echo getRusTitle("faq"); ?></a>
     </li>
-    </ul>
-    <ul style="display:none" id="sub-sidebar" class="sidebar-nav">
-    <li>
-    <a href="#" onclick="restoreSidebar()"><span class="glyphicon glyphicon-chevron-left"></span> Назад</a>
-    </li>
-    <span id="submenu-items">
-    </span>
     </ul>
     </div>
 <div id="page-content-wrapper">
@@ -160,11 +102,25 @@
 <?php
     if (getRusTitle($page) != "")
     {
+        if ($page == "users" && $subpage !== null)
+        {
+?>
+        <li><a href="?page=">Главная</a></li>
+        <li><a href="?page=users"><?php echo getRusTitle($page) ?></a></li>
+        <li class="active"><?php
+
+    if (is_numeric($subpage) && $query = mysqli_query($link, "SELECT `login` FROM users WHERE `id` = " . $subpage))
+    {
+        echo mysqli_fetch_assoc($query)['login'];
+    }
+        }
+        else
+        {
 ?>
         <li><a href="?page=">Главная</a></li>
         <li class="active"><?php echo getRusTitle($page) ?></li>
 <?php
-    } else
+    }} else
     {
 ?>
         <li class="active">Главная</li>
@@ -172,12 +128,10 @@
     }
 ?>
 </ol>
-<?php if ($page == "users")
+<?php if ($page == "users" && !$subpage)
     {
 ?>
 <?php
-    $link = getDBConnection();
-    mysqli_select_db($link, getDBName());
     if ($query = mysqli_query($link, "SELECT * FROM users"))
     {
 ?>
@@ -204,7 +158,7 @@
           else
             echo '<tr>';
           echo '<td>'.$field['id'].'</td>';
-          echo '<td><a href="userProfile.php?id='.$field['id'].'">'.$field['login'].'</a></td>';
+          echo '<td><a href="?page=users&subpage='.$field['id'].'">'.$field['login'].'</a></td>';
           echo '<td>'.$field['group'].'</td>';
           echo '<td>'.$field['surname'].'</td>';
           echo '<td>'.$field['name'].'</td>';
@@ -217,6 +171,149 @@
 </table>
 <?php
     }};
+    if ($page == "users" && is_numeric($subpage))
+    {
+?>
+
+<script>
+	$(window).load
+	(
+		function()
+		{
+			document.getElementById('submitDiv').style.display = 'none';
+		}
+	)
+</script>
+
+<script>
+	function checkPasswordStatus()
+	{
+		var status = "";
+		
+		if ($("#newPassword").val() == $("#tryAnotherOnePassword").val())
+		{
+			if ($("#newPassword").val() != "")
+			{
+				$("#passwordStatus").removeClass().addClass('greenColored').html('Пароли совпадают!');
+				document.getElementById('submitDiv').style.display = 'block';
+				return true;
+			}
+			else
+			{
+				$("#passwordStatus").removeClass().addClass('redColored').html('Пароли пусты!');
+				document.getElementById('submitDiv').style.display = 'none';
+				return false;
+			}
+		}
+		else
+		{
+			$("#passwordStatus").removeClass().addClass('redColored').html('Пароли не совпадают!');
+			document.getElementById('submitDiv').style.display = 'none';
+			return false;
+		}
+	}
+	
+<?php if (isActiveUser()) { ?>
+	function changePassword()
+	{
+		if (checkPasswordStatus())
+		$.post
+		(
+			'jqueryUpdateUserPassword.php<?php echo "?id=".$subpage?>', 
+			{ 'newPassword' : $("#newPassword").val()},
+			function(data) 
+			{
+				showModalAlert(data);
+				window.location.reload();
+			}
+		)
+  };
+
+    function changeInfo()
+    {
+        $.post
+        (
+            'jqueryUpdateUserInfo.php<?php echo "?id=".$subpage?>',
+        {
+            'newName' : $('#newName').val(),
+            'newSurname' : $('#newSurname').val(),
+            'newPatronymic' : $('#newPatronymic').val(),
+            'group' : $('#group').val()
+        },
+        function (data)
+        {
+            showModalAlert(data);
+            window.location.reload();
+        }
+    )
+  }
+
+<?php } ?>
+</script>
+
+<div class = "container content">
+  <div class="titleName">Пользователь: <?php echo getNicknameById($subpage) ?></div>
+	<div class="titleName">Изменение пароля</div>
+	<form class="form-signin" role="form" method="POST">
+		<input class="form-control" id = "newPassword" type="password" required="" placeholder="Новый пароль" onchange = "checkPasswordStatus()"> 
+		<input class="form-control" id = "tryAnotherOnePassword" type="password" required="" placeholder="Повторный набор пароля" onchange = "checkPasswordStatus();">
+		<div>
+			<p id = "passwordStatus" class = ""></p>
+		</div>
+		<br>
+		<div id = "submitDiv">
+<?php if (isActiveUser()) echo '			<button type="submit" id = "submitButton" class="btn btn-lg btn-primary btn-block" onclick = "changePassword(); return false;">Изменить пароль</button>'; ?>
+		</div>
+  </form>
+	<div class="titleName">Изменение информации</div>
+	<form class="form-signin" role="form" method="POST">
+<input class="form-control" id = "newSurname" value="<?php
+echo getUserSurname($subpage);
+?>" type="text" placeholder="Фамилия">
+  <input class="form-control" id = "newName" value="<?php
+echo getUserRealName($subpage); 
+?>" type="text" placeholder="Имя"> 
+    <input class="form-control" id = "newPatronymic" value="<?php
+echo getUserPatronymic($subpage);
+?>" type="text" placeholder="Отчество">
+<?php
+    if ($subpage != getActiveUserID())
+    {
+?>
+<br /> 
+Роль: <select id="group" class="form-control">
+<option value="user" <?php if (isUserInGroup('user', $subpage)) echo "selected"?> >Пользователь</option>
+<option value="moder" <?php if (isUserInGroup('moder', $subpage)) echo "selected"?> >Модератор</option>
+<option value="news" <?php if (isUserInGroup('news', $subpage)) echo "selected"?> >Создатель новостей</option>
+<option value="admin" <?php if (isUserInGroup('admin', $subpage)) echo "selected"?> >Администратор</option>
+<option value="banned" <?php if (isUserInGroup('banned', $subpage)) echo "selected"?> >Заблокированный</option>
+</select>
+<?php } else { ?>
+Роль:<br />
+<?php 
+      if (isUserInGroup('user', $subpage)) echo "Пользователь";
+      if (isUserInGroup('moder', $subpage)) echo "Модератор";
+      if (isUserInGroup('news', $subpage)) echo "Создатель новостей";
+      if (isUserInGroup('admin', $subpage)) echo "Администратор";
+}; 
+?>
+ 
+		<div>
+			<p id = "passwordStatus" class = ""></p>
+		</div>
+		<br>
+		<div id = "submitDiv2"><button type="submit" id = "submitButton2" onclick="changeInfo(); return false;" class="btn btn-lg btn-primary btn-block">Изменить информацию</button>
+		</div>
+	</form>
+
+</div>
+
+<?php
+if (!isActiveUser()) echo '<script>location.replace("userAuthorization.php")</script>';
+?>
+
+<?php
+    }
     if ($page == "news")
     {
 ?>
