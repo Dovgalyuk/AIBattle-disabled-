@@ -203,7 +203,7 @@
 		
 		// Так же создаём папки execution + testers + visualizers + libs + всё остальное
 		
-		$dirNames = array("testers", "visualizers", "executions", "testers_bin", "executions_bin", "libs", "includes", "attachments", "logs");
+		$dirNames = array("testers", "visualizers", "executions", "testers_bin", "executions_bin", "libs", "includes", "attachments", "logs", "_chroot");
 		$dontRemove = array("libs", "includes");
 		foreach ($dirNames as $value)
 		{
