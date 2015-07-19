@@ -12,6 +12,7 @@
 ?>
 
 <?php include("top.php"); ?>
+<div class="content container">
             <br />
             <p style="font-size:16px;">
             Тема: <?php echo $msg['title']; ?><br />
@@ -23,9 +24,10 @@
                 echo $msg['text'];
             ?> 
 
+</div>
+
+<?php include("bottom.php"); ?>
 <?php
         };
     };
 ?>
-
-<?php include("bottom.php"); ?>

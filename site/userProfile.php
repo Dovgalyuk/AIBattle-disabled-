@@ -1,6 +1,8 @@
 <?php include_once('procedures.php'); ?>
 
-<?php include("top.php"); ?>
+<?php include("top.php"); 
+if (isActiveUser())
+{ ?>
 <?php $id = (isset($_GET['id']) && isAdmin()) ? $_GET['id'] : getActiveUserID();?>
 
 <script>
@@ -137,7 +139,8 @@ echo getUserPatronymic((isAdmin() && isset($_GET['id'])) ? $_GET['id'] : "");
 </div>
 
 <?php
-if (!isActiveUser()) echo '<script>location.replace("userAuthorization.php")</script>';
+} else
+echo '<script>location.replace("userAuthorization.php")</script>';
 ?>
 
 <?php include("bottom.php"); ?>

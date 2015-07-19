@@ -11,6 +11,7 @@
     }
 ?>
 <?php include("top.php"); ?>
+<div class="content container">
 <script type="text/javascript">
     function sendMessage()
     {
@@ -101,5 +102,6 @@
 <?php
     }
 ?>
+</div>
 
 <?php include("bottom.php"); ?>

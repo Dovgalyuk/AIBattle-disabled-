@@ -39,7 +39,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a href="index.php" class="navbar-brand">AiBattle</a>
+                <a href="index.php" class="navbar-brand">AIBattle</a>
             </div>
             <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
