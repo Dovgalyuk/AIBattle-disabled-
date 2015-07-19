@@ -73,7 +73,7 @@
 					
 						<div class = "attachmentDiv">
 							<li class="download"><span class="glyphicon glyphicon-download"></span>
-								<a href="getLog.php?duel=<?php echo $row['id'];?>"><?php echo $status;?></a>
+								<a href="getLog.php?duel=<?php echo $row['id'];?>"><?php echo rusStatus($status);?></a>
 							</li>
 						</div>
 					

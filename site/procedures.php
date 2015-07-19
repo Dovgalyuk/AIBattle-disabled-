@@ -54,6 +54,35 @@
 		unset($_SESSION['adminImgTypeId']);
 		unset($_SESSION['adminImgGameId']);
 	}
+
+    function rusStatus($status)
+    {
+        if ($status == "WIN 1")
+            return "Выиграл первый игрок";
+        if ($status == "WIN 2")
+            return "Выиграл второй игрок";
+        if ($status == "TIE")
+            return "Ничья";
+        if ($status == "IM 1")
+            return "Неверный ход первого игрока";
+        if ($status == "IM 2")
+            return "Неверный ход второго игрока";
+        if ($status == "RE 1")
+            return "Ошибка выполнения у первого игрока";
+        if ($status == "RE 2")
+            return "Ошибка выполнения у второго игрока";
+         if ($status == "TL 1")
+            return "Превышен лимит по времени у первого игрока";
+         if ($status == "TL 2")
+            return "Превышен лимит по времени у второго игрока";
+         if ($status == "ML 1")
+            return "Превышен лимит по памяти у первого игрока";
+         if ($status == "ML 2")
+            return "Превышен лимит по памяти у второго игрока";
+        if ($status == "IE")
+            return "Внутренняя ошибка";
+        return $status;
+    }
 	
 	function clearTournamentState()
 	{
@@ -81,7 +110,7 @@
 	function getDBName()
 	{	
 		$file = @file('authData.txt') or die("Can't find data file! <a href=install.php>Install system</a>");
-		return $file[2];
+		return trim($file[2]);
 	}
 	
 	// аналог mysql_query
