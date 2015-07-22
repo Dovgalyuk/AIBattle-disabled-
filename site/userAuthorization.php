@@ -20,7 +20,7 @@
             {
 			    if ($data['password'] === md5(md5($_POST['password']))) 
 			    {
-				    $hash = md5(generateCode(10));
+				    $hash = md5(generateUniqueCode(10));
 				    LogIn($hash, $data['id']);
 				
 				    echo '<meta http-equiv="refresh" content="0; url=userCheckData.php?redirect='.htmlspecialchars($_POST['redirect']).'">';

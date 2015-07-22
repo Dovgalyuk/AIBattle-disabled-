@@ -21,7 +21,7 @@
 					$round = $row['round'];
 					$checker = -1;
 					$hasSeed = false;
-					// проверяем, есть ли раунд и чекер
+					// РїСЂРѕРІРµСЂСЏРµРј, РµСЃС‚СЊ Р»Рё СЂР°СѓРЅРґ Рё С‡РµРєРµСЂ
 					if ($round != -1)
 					{
 						$chk = mysqli_fetch_assoc(mysqli_query($link, "SELECT checker, seed FROM rounds WHERE id = $round"));
@@ -30,22 +30,28 @@
 					}
 					else
 					{
-						// генерируем seed, если раунд не задан
+						// РіРµРЅРµСЂРёСЂСѓРµРј seed, РµСЃР»Рё СЂР°СѓРЅРґ РЅРµ Р·Р°РґР°РЅ
 						// TODO
 						$seed = 2014;
 					}
 					if ($round == -1 || $checker == -1)
 					{
-						// берем defaultChecker
+						// Р±РµСЂРµРј defaultChecker
 						$strategyTournament = mysqli_result(mysqli_query($link, "SELECT tournament FROM strategies WHERE id = {$row['strategy1']}"), 0);
 						$checker = mysqli_result(mysqli_query($link, "SELECT defaultChecker FROM tournaments WHERE id = $strategyTournament"), 0);
 					}
-					// есть ли seed у чекера
-					$hasSeed = mysqli_result(mysqli_query($link, "SELECT hasSeed FROM checkers WHERE id = $checker"), 0);
+                    $preCmd = "";
+                    $postCmd = "";
+                    $rand = strval(rand());
+                    $hasSeed = mysqli_result(mysqli_query($link, "SELECT hasSeed FROM checkers WHERE id = $checker"), 0);
                     if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
                         $cmdLine = "\"./testers_bin/" . $checker . ".exe\" ./executions_bin/" . $row['strategy1'] . ".exe ./executions_bin/" . $row['strategy2'] . ".exe";
                     else
-                        $cmdLine = "\"./testers_bin/" . $checker . "\" ./executions_bin/" . $row['strategy1'] . " ./executions_bin/" . $row['strategy2'] . "";
+                    {
+                        $preCmd = "mkdir _chroot/$rand \n cp ./testers_bin/" . $checker . " _chroot/$rand/tester\n cp ./executions_bin/" . $row['strategy1'] . "  _chroot/$rand/1 \n cp ./executions_bin/" . $row['strategy2'] . " _chroot/$rand/2\n";
+                        $cmdLine = "fakechroot fakeroot chroot _chroot/$rand ./tester 1 2";
+                        $postCmd = "rm -rf _chroot/$rand";
+                    }
 
 					if ($hasSeed)
 						$cmdLine .= " ". $seed;
@@ -54,7 +60,9 @@
 					
 					//fwrite($file, $cmdLine . '\n');
 					$output = array();
+                    exec($preCmd);
 					exec($cmdLine, $output);
+                    exec($postCmd);
 					
 					$source = current($output);
 					$playerId = 0;
@@ -125,7 +133,7 @@
 						}
 					}
 					$log = fopen("./logs/" . $row['id'] . ".txt", "w");
-					fwrite($log, "PLAYERS\n" . getUserNameByStrategy($row['strategy1']) . "\n" . getUserNameByStrategy($row['strategy2']) . "\n");
+					fwrite($log, "PLAYERS\n" . getNicknameByStrategy($row['strategy1']) . "\n" . getNicknameByStrategy($row['strategy2']) . "\n");
 					foreach ($output as $line)
 					{
 						fwrite($log, $line . "\n");

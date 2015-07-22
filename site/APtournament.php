@@ -108,12 +108,12 @@
 					dataTournament,
 					function (data)
 					{
-						alert(data);
+						showModalAlert(data);
 						window.location.reload(); 
 					}
 				);
 			}
-			else alert('Название турнира не должно быть пустым!');
+			else showModalAlert('Название турнира не должно быть пустым!');
 		}
 		
 		function deleteTournament()
@@ -130,7 +130,7 @@
 				},
 				function (data)
 				{
-					alert(data);
+					showModalAlert(data);
 					window.location.reload(); 
 				}
 			);

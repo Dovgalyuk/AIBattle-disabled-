@@ -15,7 +15,7 @@
 	{
  ?>
 	<h2>Описание турнира</h2>
-	<div class="textSettings"><?php echo getTournamentDescription($tournamentId); ?></div>
+	<div class="textSettings"><?php echo getTournamentDescriptionByTournamentId($tournamentId); ?></div>
 <?php
 	}
 ?>

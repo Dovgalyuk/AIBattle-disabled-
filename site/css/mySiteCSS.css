@@ -91,6 +91,13 @@ body {
 	/*margin-bottom: 20px;*/
 }
 
+@media(max-width: 768px) {
+    .content {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+}
+
 .addMenyUlTop {
 	padding-top: 10px;
 }

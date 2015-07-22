@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.11)
 set(CMAKE_AUTOMOC ON)
 find_package(Qt4)
-include(${QT_USE_FILE}) 
+include(${QT_USE_FILE})
 include_directories(${AIBATTLE_SOURCE_DIR}/Visualizer)
 link_directories(${AIBATTLE_BINARY_DIR}/Visualizer)
 include_directories(${AIBATTLE_SOURCE_DIR}/Execution)

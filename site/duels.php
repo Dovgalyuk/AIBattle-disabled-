@@ -11,9 +11,9 @@
     $_SESSION['tournamentDuel'] = $roundId;
 	
     $gameId = intval($_GET['game']);
-    $userId = (isAdmin() && isset($_GET['uid'])) ? intval($_GET['id']) : getActiveUser();
+    $userId = (isAdmin() && isset($_GET['uid'])) ? intval($_GET['id']) : getActiveUserID();
     $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
-    $visual = hasVisualizer($gameId);
+    $visual = getVisualizerByGame($gameId);
     $tournamentId = intval($_GET['tournament']);
 	
     $duels = getDuels($roundId, $gameId, $userId, $tournamentId, $page * 10, 10);
@@ -73,7 +73,7 @@
 					
 						<div class = "attachmentDiv">
 							<li class="download"><span class="glyphicon glyphicon-download"></span>
-								<a href="getLog.php?duel=<?php echo $row['id'];?>"><?php echo $status;?></a>
+								<a href="getLog.php?duel=<?php echo $row['id'];?>"><?php echo rusStatus($status);?></a>
 							</li>
 						</div>
 					

@@ -99,7 +99,7 @@
 				<?php echo $comment['date']; ?>
 			</div>
 			<?php
-				if ($comment['user'] == getActiveUser() || isAdmin() || isModerator())
+				if ($comment['user'] == getActiveUserID() || isAdmin() || isModerator())
 				{
 			?>
 					<button type = "submit" name = "submit" onclick = "editComment(<?php echo $newsId.",".$comment['id']; ?>); return false;" class = "btn btn-default">Изменить</button>
@@ -120,7 +120,7 @@
 	?>
 	
 	<?php
-		if (getActiveUser() != -1 )
+		if (getActiveUserID() != -1 )
 		{
 			$commentText = "Отправить";
 			if ($commentId != -1)

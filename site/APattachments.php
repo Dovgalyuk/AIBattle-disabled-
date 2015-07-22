@@ -78,7 +78,7 @@
 					data: form,
 					success: function (data)
 					{	
-						alert(data);
+						showModalAlert(data);
 						loadGameData(currentGameId, currentAttachmentId);
 					},
 					cache: false,
@@ -86,7 +86,7 @@
 					processData: false
 					});
 			}
-			else alert('Название файла не должно быть пустым!');
+			else showModalAlert('Название файла не должно быть пустым!');
 		}
 		
 		function deleteAttachment()
@@ -98,7 +98,7 @@
 				{'attachmentId' : currentAttachmentId, 'deleteAttachment' : true},
 				function (data) 
 				{
-					alert(data);
+					showModalAlert(data);
 					loadGameData(getSelectedGame(), -1);
 				}
 			);

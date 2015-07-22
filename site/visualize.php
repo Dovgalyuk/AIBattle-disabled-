@@ -10,7 +10,7 @@
 		<?php
 			$duel = intval($_GET['duel']);
 			$gameId = getGameByDuel($duel);
-			if (hasVisualizer($gameId) && userHasAccess($duel))
+			if (getVisualizerByGame($gameId) && isActiveUserHasAccessToDuel($duel))
 			{
 				$file = file("./logs/$duel.txt");
 				$log = "";
@@ -46,8 +46,8 @@
 				{	
 					$res = mysqli_query($link, "SELECT strategy1, strategy2, duels.status FROM duels WHERE duels.id=$duel");
 					$game = getGameName($gameId);
-					$user1 = getUserNameByStrategy(mysqli_result($res, 0, 0)); 
-					$user2 = getUserNameByStrategy(mysqli_result($res, 0, 1));
+					$user1 = getNicknameByStrategy(mysqli_result($res, 0, 0)); 
+					$user2 = getNicknameByStrategy(mysqli_result($res, 0, 1));
 					$status = mysqli_result($res, 0, 2);
 				}
 		?>

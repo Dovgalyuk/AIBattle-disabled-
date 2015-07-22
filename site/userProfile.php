@@ -1,7 +1,9 @@
 <?php include_once('procedures.php'); ?>
 
-<?php include("top.php"); ?>
-<?php $id = (isset($_GET['id']) && isAdmin()) ? $_GET['id'] : getActiveUser();?>
+<?php include("top.php"); 
+if (isActiveUser())
+{ ?>
+<?php $id = (isset($_GET['id']) && isAdmin()) ? $_GET['id'] : getActiveUserID();?>
 
 <script>
 	$(window).load
@@ -51,7 +53,7 @@
 			{ 'newPassword' : $("#newPassword").val()},
 			function(data) 
 			{
-				alert(data);
+				showModalAlert(data);
 				window.location.reload();
 			}
 		)
@@ -70,7 +72,7 @@
         },
         function (data)
         {
-            alert(data);
+            showModalAlert(data);
             window.location.reload();
         }
     )
@@ -80,7 +82,7 @@
 </script>
 
 <div class = "container content">
-  <div class="titleName">Пользователь: <?php echo getNicknameById((isAdmin() && isset($_GET['id'])) ? $_GET['id'] : getActiveUser()) ?></div>
+  <div class="titleName">Пользователь: <?php echo getNicknameById((isAdmin() && isset($_GET['id'])) ? $_GET['id'] : getActiveUserID()) ?></div>
 	<div class="titleName">Изменение пароля</div>
 	<form class="form-signin" role="form" method="POST">
 		<input class="form-control" id = "newPassword" type="password" required="" placeholder="Новый пароль" onchange = "checkPasswordStatus()"> 
@@ -105,24 +107,24 @@ echo getUserRealName((isAdmin() && isset($_GET['id'])) ? $_GET['id'] : "");
 echo getUserPatronymic((isAdmin() && isset($_GET['id'])) ? $_GET['id'] : "");
 ?>" type="text" placeholder="Отчество">
 <?php
-    if (isAdmin() && ($id != getActiveUser()))
+    if (isAdmin() && ($id != getActiveUserID()))
     {
 ?>
 <br /> 
 Роль: <select id="group" class="form-control">
-<option value="user" <?php if (checkGroupExist('user', $id)) echo "selected"?> >Пользователь</option>
-<option value="moder" <?php if (checkGroupExist('moder', $id)) echo "selected"?> >Модератор</option>
-<option value="news" <?php if (checkGroupExist('news', $id)) echo "selected"?> >Создатель новостей</option>
-<option value="admin" <?php if (checkGroupExist('admin', $id)) echo "selected"?> >Администратор</option>
-<option value="banned" <?php if (checkGroupExist('banned', $id)) echo "selected"?> >Заблокированный</option>
+<option value="user" <?php if (isUserInGroup('user', $id)) echo "selected"?> >Пользователь</option>
+<option value="moder" <?php if (isUserInGroup('moder', $id)) echo "selected"?> >Модератор</option>
+<option value="news" <?php if (isUserInGroup('news', $id)) echo "selected"?> >Создатель новостей</option>
+<option value="admin" <?php if (isUserInGroup('admin', $id)) echo "selected"?> >Администратор</option>
+<option value="banned" <?php if (isUserInGroup('banned', $id)) echo "selected"?> >Заблокированный</option>
 </select>
 <?php } else { ?>
 Роль:<br />
 <?php 
-      if (checkGroupExist('user', $id)) echo "Пользователь";
-      if (checkGroupExist('moder', $id)) echo "Модератор";
-      if (checkGroupExist('news', $id)) echo "Создатель новостей";
-      if (checkGroupExist('admin', $id)) echo "Администратор";
+      if (isUserInGroup('user', $id)) echo "Пользователь";
+      if (isUserInGroup('moder', $id)) echo "Модератор";
+      if (isUserInGroup('news', $id)) echo "Создатель новостей";
+      if (isUserInGroup('admin', $id)) echo "Администратор";
 }; 
 ?>
  
@@ -137,7 +139,8 @@ echo getUserPatronymic((isAdmin() && isset($_GET['id'])) ? $_GET['id'] : "");
 </div>
 
 <?php
-if (!isActiveUser()) echo '<script>location.replace("userAuthorization.php")</script>';
+} else
+echo '<script>location.replace("userAuthorization.php")</script>';
 ?>
 
 <?php include("bottom.php"); ?>

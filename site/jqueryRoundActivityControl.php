@@ -13,7 +13,7 @@
 			$acceptedUsers = $_POST['users'];
 			foreach($acceptedUsers as $strategyId)
 			{
-				$userId = intval(getUserByStrategy($strategyId));
+				$userId = intval(getUserIdByStrategy($strategyId));
 				mysqli_query($link, "DELETE FROM roundActivity WHERE round = $roundId AND user = $userId");
 			}
 		}
@@ -22,7 +22,7 @@
 			$possibleUsers = $_POST['users'];
 			foreach($possibleUsers as $strategyId)
 			{
-				$userId = intval(getUserByStrategy($strategyId));
+				$userId = intval(getUserIdByStrategy($strategyId));
 				mysqli_query($link, "INSERT INTO roundActivity SET round = $roundId, user = $userId, state = 'ACT'");
 			}
 		}
@@ -35,7 +35,7 @@
 			{
 				foreach($possibleUsers as $strategyId)
 				{
-					$userId = intval(getUserByStrategy($strategyId));
+					$userId = intval(getUserIdByStrategy($strategyId));
 					mysqli_query($link, "INSERT INTO roundActivity SET round = $roundId, user = $userId, state = 'ACT'");
 					$counter = $counter + 1;
 					if ($counter == $value)
@@ -52,7 +52,7 @@
 			{
 				if (getScoreByStrategy($previousRound, $strategyId) > $value)
 				{
-					$userId = getUserByStrategy($strategyId);
+					$userId = getUserIdByStrategy($strategyId);
 					mysqli_query($link, "INSERT INTO roundActivity SET round = $roundId, user = $userId, state = 'ACT'");
 				}
 			}

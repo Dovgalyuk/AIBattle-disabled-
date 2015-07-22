@@ -11,6 +11,7 @@
     }
 ?>
 <?php include("top.php"); ?>
+<div class="content container">
 <script type="text/javascript">
     function sendMessage()
     {
@@ -25,7 +26,7 @@
             },
             function (data)
             {
-                alert(data);
+                showModalAlert(data);
                 window.location.reload();
             } 
         );
@@ -35,7 +36,7 @@
 <?php
     if (isActiveUser())
     {
-        $id = getActiveUser();
+        $id = getActiveUserID();
         $messages = getUserMessages();
 ?>
 <br />
@@ -101,5 +102,6 @@
 <?php
     }
 ?>
+</div>
 
 <?php include("bottom.php"); ?>

@@ -10,7 +10,7 @@
 			{'userQuestion' : CKEDITOR.instances.userQuestion.getData()},
 			function (data)
 			{
-				alert(data);
+				showModalAlert(data);
 				window.location.reload();
 			}
 		);
@@ -38,7 +38,7 @@
 		?>
 
 		<?php
-			if (getActiveUser() != -1)
+			if (getActiveUserID() != -1)
 			{
 		?>
 			<br>

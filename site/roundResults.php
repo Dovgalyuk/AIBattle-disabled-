@@ -58,7 +58,7 @@
 			<h3>Турнирная таблица</h3>
 			<a href="javascript:loadRoundTable(<?php echo $roundId;?>)">Посмотреть</a>
 <?php
-		if (getActiveUser() != -1)
+		if (getActiveUserID() != -1)
 		{
 ?>
 			<br>

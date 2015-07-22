@@ -4,7 +4,7 @@
 	if (mysqli_select_db($link, getDBName()))
 	{
 		$duel = intval($_GET['duel']);
-		$user = intval(getActiveUser());
+		$user = intval(getActiveUserID());
 		$round = mysqli_result(mysqli_query($link, "SELECT round FROM duels WHERE id = $duel"), 0);
 		$query = "SELECT COUNT(*) FROM duels";
 		if (!isAdmin())

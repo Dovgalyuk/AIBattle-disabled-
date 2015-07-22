@@ -54,6 +54,35 @@
 		unset($_SESSION['adminImgTypeId']);
 		unset($_SESSION['adminImgGameId']);
 	}
+
+    function rusStatus($status)
+    {
+        if ($status == "WIN 1")
+            return "Выиграл первый игрок";
+        if ($status == "WIN 2")
+            return "Выиграл второй игрок";
+        if ($status == "TIE")
+            return "Ничья";
+        if ($status == "IM 1")
+            return "Неверный ход первого игрока";
+        if ($status == "IM 2")
+            return "Неверный ход второго игрока";
+        if ($status == "RE 1")
+            return "Ошибка выполнения у первого игрока";
+        if ($status == "RE 2")
+            return "Ошибка выполнения у второго игрока";
+         if ($status == "TL 1")
+            return "Превышен лимит по времени у первого игрока";
+         if ($status == "TL 2")
+            return "Превышен лимит по времени у второго игрока";
+         if ($status == "ML 1")
+            return "Превышен лимит по памяти у первого игрока";
+         if ($status == "ML 2")
+            return "Превышен лимит по памяти у второго игрока";
+        if ($status == "IE")
+            return "Внутренняя ошибка";
+        return $status;
+    }
 	
 	function clearTournamentState()
 	{
@@ -81,7 +110,7 @@
 	function getDBName()
 	{	
 		$file = @file('authData.txt') or die("Can't find data file! <a href=install.php>Install system</a>");
-		return $file[2];
+		return trim($file[2]);
 	}
 	
 	// аналог mysql_query
@@ -100,7 +129,7 @@
 	}
 	
 	// Получение ID пользователя
-	function getActiveUser()
+	function getActiveUserID()
 	{
 		if (!isActiveUser())
 			return -1;
@@ -108,7 +137,7 @@
 	}
 	
 	// Получение ника пользователя
-	function getNickname()
+	function getActiveUserNickname()
 	{
 		$link = getDBConnection();
 		
@@ -120,25 +149,13 @@
 		}
 		else return "Anonymous";
 	}
-	
-	// Получение никнейма по айди
-	function getNicknameById($id)
-	{
-		$link = getDBConnection();
-		if (mysqli_select_db($link, getDBName()))
-		{
-			$id = intval($id);
-			$nickname = mysqli_query($link, "SELECT login FROM users WHERE id = $id");
-			return mysqli_result($nickname, 0);
-		}
-	}
-	
+
 	// Получение имени пользователя
-	function getUserName($id = -1)
+	function getNicknameById($id = -1)
 	{
 		$link = getDBConnection();
 		if ($id == -1) 
-			$id = getActiveUser();
+			$id = getActiveUserID();
 		if ($id != -1 && mysqli_select_db($link, getDBName()))
 		{
 			$id = intval($id);
@@ -161,7 +178,7 @@
     }
 	
     // Принадлежность к группе пользователей
-    function checkGroupExist($group, $id="")
+    function isUserInGroup($group, $id="")
     {
         if (isset($_SESSION['SBUserid']))
         {
@@ -188,28 +205,28 @@
 	// Проверка пользователя на принадлежность касте администраторов
 	function isAdmin()
 	{
-		return checkGroupExist('admin');
+		return isUserInGroup('admin');
 	}
 	
 	// Проверка пользователя на принадлежность к создателям новостей
 	function isNewsMaker()
 	{
-		return checkGroupExist('news');
+		return isUserInGroup('news');
 	}
 	
 	// Проверка пользователя на принадлежность к модераторам
 	function isModerator()
 	{
-		return checkGroupExist('moder');
+		return isUserInGroup('moder');
     }
 
     function isBanned()
     {
-        return checkGroupExist('banned');
+        return isUserInGroup('banned');
     }
 	
 	// Генерация уникального кода
-	function generateCode($length=6) 
+	function generateUniqueCode($length=6) 
 	{
 		$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHI JKLMNOPRQSTUVWXYZ0123456789";
 		$code = "";
@@ -254,8 +271,8 @@
 			$strategyID 	= mysqli_real_escape_string($link, $strategyID);
 			$game 			= mysqli_real_escape_string($link, $game);
 			$tournamentId 	= mysqli_real_escape_string($link, $tournamentId);
-			mysqli_query($link, "UPDATE strategies SET status = 'OK' WHERE status = 'ACT' AND user = ".intval(getActiveUser())." AND game = ".$game." AND tournament = ".$tournamentId);
-			mysqli_query($link, "UPDATE strategies SET status = 'ACT' WHERE id = ".$strategyID." AND user = ".intval(getActiveUser())." AND tournament = ".$tournamentId);
+			mysqli_query($link, "UPDATE strategies SET status = 'OK' WHERE status = 'ACT' AND user = ".intval(getActiveUserID())." AND game = ".$game." AND tournament = ".$tournamentId);
+			mysqli_query($link, "UPDATE strategies SET status = 'ACT' WHERE id = ".$strategyID." AND user = ".intval(getActiveUserID())." AND tournament = ".$tournamentId);
 		}
 	}
 		
@@ -305,7 +322,7 @@
 	}
 	
 	// Получение никнейма по номеру стратегии
-	function getUserByStrategy($strategyId)
+	function getUserIdByStrategy($strategyId)
 	{
 		$link = getDBConnection();
 		if (mysqli_select_db($link, getDBName()))
@@ -316,9 +333,9 @@
 		}
 		return -1;
 	}
-	function getUserNameByStrategy($strategyId)
+	function getNicknameByStrategy($strategyId)
 	{
-		return getNicknameById(getUserByStrategy($strategyId));
+		return getNicknameById(getUserIdByStrategy($strategyId));
 	}
 
 	function getGameByDuel($duel)
@@ -333,7 +350,7 @@
 		return -1;
 	}
 
-	function hasVisualizer($gameId)
+	function getVisualizerByGame($gameId)
 	{
 		if ($gameId == -1)
 			return false;
@@ -349,7 +366,7 @@
 		}
 	}
 
-    function userHasAccess($duel)
+    function isActiveUserHasAccessToDuel($duel)
     {
     	$link = getDBConnection();
         if (!mysqli_select_db($link, getDBName()))
@@ -357,7 +374,7 @@
         
         if (isAdmin())
     	    return true;
-        $userId = intval(getActiveUser());
+        $userId = intval(getActiveUserID());
         $duel = intval($duel);
         $duelParams = mysqli_query($link, "SELECT round, strategy1, strategy2 FROM duels WHERE id = $duel");
         $round = mysqli_result($duelParams, 0, 0);
@@ -370,8 +387,8 @@
             else
                 return true;
         }
-        if (getUserByStrategy($s1) == $userId
-            || getUserByStrategy($s2) == $userId)
+        if (getUserIdByStrategy($s1) == $userId
+            || getUserIdByStrategy($s2) == $userId)
         {
             return true;
         }
@@ -560,7 +577,7 @@
 	// Дизайн
 	
 	// Вывод заголовка на экран
-	function getHeaderRus($scriptName)
+	function getPageHeaderByScriptName($scriptName)
 	{
 		//
 		$headers = array
@@ -646,7 +663,7 @@
 	}
 	
 	// Получение описания турнира
-	function getTournamentDescription($tournamentId)
+	function getTournamentDescriptionByTournamentId($tournamentId)
 	{
 		$link = getDBConnection();
 		$tournamentDescription = "none";
@@ -703,7 +720,7 @@
 		$link = getDBConnection();
         $messages = array();
 		mysqli_select_db($link, getDBName());
-        $userId = intval(getActiveUser());
+        $userId = intval(getActiveUserID());
 		$query = mysqli_query($link, "SELECT * FROM `privateMessages` WHERE (`sender` = $userId OR `recevier` = $userId) ".($id != 0 ? " AND id=".$id : "").($notreaded ? " AND viewed=0" : "")." ORDER BY id DESC".(($size != -1) ? " LIMIT $first, $size" : " "));
 	    while ($data = mysqli_fetch_assoc($query))
             $messages[$data['id']] = array(
@@ -724,7 +741,7 @@
         $link = getDBConnection();
         $messages = array();
         mysqli_select_db($link, getDBName());
-        $userId = intval(getActiveUser());
+        $userId = intval(getActiveUserID());
         $recevier = intval($recevier);
         $title = mysqli_real_escape_string($link, $title);
         $text = mysqli_real_escape_string($link, $text);
@@ -738,7 +755,7 @@
     {
         if (!isActiveUser())
             return false;
-        $userId = intval(getActiveUser());
+        $userId = intval(getActiveUserID());
         $id = intval($id);
         $messages = getUserMessages(0, -1, $id);
         if (!isset($messages[$id]))
@@ -754,7 +771,7 @@
     {
         if (!isActiveUser())
             return 0;
-        $userId = intval(getActiveUser());
+        $userId = intval(getActiveUserID());
         $link = getDBConnection();
         mysqli_select_db($link, getDBName());
         $query = mysqli_query($link, "SELECT COUNT(*) FROM `privateMessages` WHERE viewed=0 AND recevier = $userId");
@@ -764,7 +781,7 @@
 
 	
 	// проверка на существование игры с выбранным ID
-	function isAnyGamesAvailable($gameID)
+	function isGameExists($gameID)
 	{
 		$link = getDBConnection();
 		if (mysqli_select_db($link, getDBName()))
@@ -806,7 +823,7 @@
 		{
 			$gameId = intval($gameId);
 			$tournamentId = intval($tournamentId);
-			return mysqli_query($link, "SELECT id FROM strategies WHERE tournament = $tournamentId AND game = $gameId AND status = 'ACT' AND user=".intval(getActiveUser()));
+			return mysqli_query($link, "SELECT id FROM strategies WHERE tournament = $tournamentId AND game = $gameId AND status = 'ACT' AND user=".intval(getActiveUserID()));
 		}
     }
 	
@@ -1645,7 +1662,7 @@
 		}
 	}
 	
-	function checkRoundVisible($roundId)
+	function isRoundVisible($roundId)
 	{
 		$link = getDBConnection();
 		if (mysqli_select_db($link, getDBName()))
@@ -1852,7 +1869,7 @@
 		if (mysqli_select_db($link, getDBName()))
 		{
 			$newsId 		= intval($newsId);
-			$currentUserId 	= intval(getActiveUser());
+			$currentUserId 	= intval(getActiveUserID());
 			if ($currentUserId != -1)
 			{
 				$query = mysqli_query($link, "INSERT INTO newsComments SET news = $newsId, user = $currentUserId, text = '$text', date = NOW()");
@@ -1864,7 +1881,7 @@
 	function updateComment($commentId, $text)
 	{
 		$cData = getComment($commentId);
-		if ($cData[0]['user'] == getActiveUser() || isAdmin() || isModerator())
+		if ($cData[0]['user'] == getActiveUserID() || isAdmin() || isModerator())
 		{
 			$link = getDBConnection();
 			if (mysqli_select_db($link, getDBName()))
@@ -1881,7 +1898,7 @@
 	function deleteComment($commentId)
 	{
 		$cData = getComment($commentId);
-		if ($cData[0]['user'] == getActiveUser() || isAdmin() || isModerator())
+		if ($cData[0]['user'] == getActiveUserID() || isAdmin() || isModerator())
 		{
 			$link = getDBConnection();
 			if (mysqli_select_db($link, getDBName()))
@@ -1912,7 +1929,7 @@
 		$data = array();
 		if (mysqli_select_db($link, getDBName()))
 		{
-			$currentUserId 	= intval(getActiveUser());
+			$currentUserId 	= intval(getActiveUserID());
 			$text 			= mysqli_real_escape_string($link, $text);
 			
 			if (mysqli_query($link, "INSERT INTO userQuestions SET user = $currentUserId, question = '$text', status = 'opened'"))
@@ -1983,7 +2000,7 @@
 		{
 			$answer 		= mysqli_real_escape_string($link, $answer);
 			$question 		= mysqli_real_escape_string($link, $question);
-			$currentUserId 	= intval(getActiveUser());
+			$currentUserId 	= intval(getActiveUserID());
 			
 			if (mysqli_query($link, "INSERT INTO userQuestions SET user = $currentUserId, question = '$question', answer = '$answer', status = 'answered'"))
 				return 0;
@@ -2308,11 +2325,11 @@
 			if (isAdmin() && ($id != ""))
         			$currentId = intval($id);
      			else
-        			$currentId = intval(getActiveUser());
+        			$currentId = intval(getActiveUserID());
 			if (mysqli_query($link, "UPDATE users SET password = '$newPassword' WHERE id = $currentId"))
 			{
 				//logOff();
-				LogIn(md5(generateCode(10)), getActiveUser());
+				LogIn(md5(generateUniqueCode(10)), getActiveUserID());
 				return 0;
 			}
 			return 1;
@@ -2322,7 +2339,7 @@
   function setUserGroup($newGroup, $id)
   {
         if (!isAdmin()) return 4;
-        if ($id == getActiveUser()) return 4;
+        if ($id == getActiveUserID()) return 4;
         $link = getDBConnection();
         if (($newGroup != "user") && ($newGroup != "moder") && ($newGroup != "news") && ($newGroup != "admin") && ($newGroup != "banned"))
             return 4;
@@ -2346,7 +2363,7 @@
             if (isAdmin() && ($id != ""))
                 $currentId = intval($id);
             else
-                $currentId = intval(getActiveUser());
+                $currentId = intval(getActiveUserID());
 
             if (mysqli_query($link, "UPDATE users SET name = '$newName' WHERE id = $currentId"))
                 return 0;
@@ -2366,7 +2383,7 @@
             if (isAdmin() && ($id != ""))
                 $currentId = intval($id);
             else
-                $currentId = intval(getActiveUser());
+                $currentId = intval(getActiveUserID());
 
             if (mysqli_query($link, "UPDATE users SET surname = '$newName' WHERE id = $currentId"))
                 return 0;
@@ -2386,7 +2403,7 @@
             if (isAdmin() && ($id != ""))
                 $currentId = intval($id);
             else
-                $currentId = intval(getActiveUser());
+                $currentId = intval(getActiveUserID());
 
             if (mysqli_query($link, "UPDATE users SET patronymic = '$newName' WHERE id = $currentId"))
                 return 0;
@@ -2404,7 +2421,7 @@
             if (isAdmin() && ($id != ""))
                 $currentId = intval($id);
             else
-                $currentId = intval(getActiveUser());
+                $currentId = intval(getActiveUserID());
             $query = mysqli_query($link, "SELECT name FROM users WHERE id = $currentId");
             $res = mysqli_fetch_assoc($query);
             return $res['name'];
@@ -2419,7 +2436,7 @@
             if (isAdmin() && ($id != ""))
                 $currentId = intval($id);
             else
-                $currentId = intval(getActiveUser());
+                $currentId = intval(getActiveUserID());
             $query = mysqli_query($link, "SELECT surname FROM users WHERE id = $currentId");
             $res = mysqli_fetch_assoc($query);
             return $res['surname'];
@@ -2434,7 +2451,7 @@
             if (isAdmin() && ($id != ""))
                 $currentId = intval($id);
             else
-                $currentId = intval(getActiveUser());
+                $currentId = intval(getActiveUserID());
 
             $query = mysqli_query($link, "SELECT patronymic FROM users WHERE id = $currentId");
             $res = mysqli_fetch_assoc($query);

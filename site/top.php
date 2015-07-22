@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		
 
-		<title><?php echo getHeaderRus($_SERVER['PHP_SELF']);?></title>
+		<title><?php echo getPageHeaderByScriptName($_SERVER['PHP_SELF']);?></title>
 
 		<!-- Bootstrap core CSS -->
 		
@@ -39,7 +39,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a href="index.php" class="navbar-brand">Software Battle</a>
+                <a href="index.php" class="navbar-brand">AIBattle</a>
             </div>
             <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
@@ -107,7 +107,7 @@
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle profilePadding" data-toggle="dropdown"> 
                     <span class="glyphicon glyphicon-user"></span> <?php if (!isActiveUser()) echo "Профиль"; else
-echo getNickname().(($notViewedMessages = getNotViewedMessages()) > 0 ? " ($notViewedMessages)" : "")?> <b class="caret"></b>
+echo getActiveUserNickname().(($notViewedMessages = getNotViewedMessages()) > 0 ? " ($notViewedMessages)" : "")?> <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu">
                 <?php 
