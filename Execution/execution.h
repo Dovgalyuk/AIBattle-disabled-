@@ -27,6 +27,13 @@ enum ExecutionResult
     ER_TIE, // Ничья
 };
 
+/*! Executes the specified process with limitations.
+  \param exe Executable to run         
+  \param input Input data                
+  \param output Output data               
+  \param timeLimit Time Limit in milliseconds
+  \param memoryLimit Memory Limit in kilobytes  
+*/
 ExecutionResult runProcess(const std::string &exe, const std::string &input,
     std::string &output, int timeLimit, int memoryLimit);
 

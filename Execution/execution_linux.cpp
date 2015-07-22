@@ -1,10 +1,7 @@
 #include "execution.h"
 
-ExecutionResult runProcess(const std::string &exe,         //Executable to run
-                           const std::string &input,       //Input data
-                           std::string       &output,      //Output data
-                           int               timeLimit,    //Time Limit in milliseconds
-                           int               memoryLimit) //Memory Limit in kilobytes
+ExecutionResult runProcess(const std::string &exe, const std::string &input,
+                           std::string &output, int timeLimit, int memoryLimit)
 {
     //Running process
     int outputPipe[2];
