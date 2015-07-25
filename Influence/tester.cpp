@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include <set>
+#include <algorithm>
 #include <cstring>
 #include "execution.h"
 
@@ -40,7 +41,7 @@ void saveField(int n)
 
 void genGraph(int v, int amount)
 {
-    int step = rand() % (amount / 2 - num_st[v]) + 1;
+    int step = rand() % (amount / 3 - num_st[v]) + 1;
     was[v] = true;
     for (int i = 0; i < step; i++)
     {
@@ -116,6 +117,10 @@ int main(int argc, char **argv)
 
     n = rand() % 30 + 10;
     genGraph(0, n);
+    for (int i = 0; i < n; ++i)
+    {
+        std::unique(graph[i].begin(), graph[i].end());
+    }
     int first_beg = rand() % n;
     int second_beg = rand() % n;
 
@@ -214,6 +219,18 @@ int main(int argc, char **argv)
             std::ostringstream outs;
             outs << num_player << "\n";
             outs << "Phase 2\n";
+            edges.clear();
+            verts.clear();
+            was_cl();
+            int beg;
+            for (int i = 0; i < n; i++)
+            {
+                if (map_[i].second == num_player && !was[i])
+                {
+                    verts.push_back(i);
+                    genMap(i, num_player);
+                }
+            }
             outs << verts.size() << " " << edges.size() << "\n";
             for (int i = 0; i < int(edges.size()); i++)
             {
@@ -272,6 +289,18 @@ int main(int argc, char **argv)
                 outs = std::ostringstream();
                 outs << num_player << "\n";
                 outs << "Phase 2\n";
+                edges.clear();
+                verts.clear();
+                was_cl();
+                int beg;
+                for (int i = 0; i < n; i++)
+                {
+                    if (map_[i].second == num_player && !was[i])
+                    {
+                        verts.push_back(i);
+                        genMap(i, num_player);
+                    }
+                }
                 outs << verts.size() << " " << edges.size() << "\n";
                 for (int i = 0; i < int(edges.size()); i++)
                 {
