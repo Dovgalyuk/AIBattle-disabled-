@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.11)
+cmake_minimum_required(VERSION 2.6)
 set(CMAKE_AUTOMOC ON)
 include_directories(${AIBATTLE_SOURCE_DIR}/Execution)
 link_directories(${AIBATTLE_BINARY_DIR}/Execution)
