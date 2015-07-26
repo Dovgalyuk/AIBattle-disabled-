@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.11)
+cmake_minimum_required(VERSION 2.8.7)
 set(CMAKE_AUTOMOC ON)
 find_package(Qt4)
 include(${QT_USE_FILE}) 
