@@ -135,6 +135,7 @@ int main(int argc, char **argv)
     ExecutionResult result = ER_OK;
     for (int move = 0 ; move < 500 ; ++move)
     {
+        std::cout << "Move #" << move + 1 << "\n";
         saveField(n);
         bool first = move % 2 == 0;
         int num_player = move % 2 + 1;
@@ -286,7 +287,8 @@ int main(int argc, char **argv)
                 }
                 map_[u].first = 1;
                 std::string output;
-                outs = std::ostringstream();
+                outs.str("");
+                outs.clear();
                 outs << num_player << "\n";
                 outs << "Phase 2\n";
                 edges.clear();
@@ -315,7 +317,8 @@ int main(int argc, char **argv)
                 printLog(first, result, output);
                 if (result == ER_OK)
                 {
-                    insPhase2 = std::istringstream(output);
+                    insPhase2.clear();
+                    insPhase2.str(output);
                     insPhase2 >> s;
                 }
                 else
