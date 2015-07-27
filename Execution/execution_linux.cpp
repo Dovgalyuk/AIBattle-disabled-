@@ -29,8 +29,8 @@ ExecutionResult runProcess(const std::string &exe, const std::string &input,
         setrlimit(RLIMIT_AS, &rmemlimit);
 
         rlimit rtimelimit; //Time limit
-        rtimelimit.rlim_cur = timeLimit / 1000;
-        rtimelimit.rlim_max = timeLimit / 1000;
+        rtimelimit.rlim_cur = std::max(timeLimit / 1000, 1);
+        rtimelimit.rlim_max = std::max(timeLimit / 1000, 1);
         setrlimit(RLIMIT_CPU, &rtimelimit);
 
         char the_path[256];
@@ -67,11 +67,11 @@ ExecutionResult runProcess(const std::string &exe, const std::string &input,
         char zeroBuffer[1] = {'\0'};
         write(inputPipe[1], zeroBuffer, 1);
         close(inputPipe[1]); //Close writing end of input
-        int status;
+        int status = 0;
         int timeout_pid = fork();
         if (timeout_pid == 0)
         {
-            usleep(timeLimit * 1000);
+            usleep(timeLimit * 10000);
             exit(0);
         }
         int status_new;
@@ -83,23 +83,31 @@ ExecutionResult runProcess(const std::string &exe, const std::string &input,
         else
         {
             kill(pid, SIGKILL);
-            status_new = 2;
+            status = 2;
         }
         wait(NULL);
-        status /= 256;
         char buffer[1024];
         int z;
         while ((z = read(outputPipe[0], buffer, sizeof(buffer))) != 0)
         {
             for (int i = 0; i < z; ++i)
                 output += buffer[i];
+        } 
+        if (status == 2)
+            return ER_TL;
+        if (WIFSIGNALED(status_new))
+        {
+            if ((WTERMSIG(status_new) == SIGXCPU) ||
+                (WTERMSIG(status_new) == SIGKILL))
+                return ER_TL;
+            else
+            {
+                return ER_RE;
+            }
         }
+        kill(pid, SIGKILL); 
         if (status_new == 0)
             return ER_OK;
-        if (status_new == 1)
-            return ER_RE;
-        if (status_new == 2)
-            return ER_TL;
         return ER_IE;
     }
 }
