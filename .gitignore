@@ -8,3 +8,4 @@
 /CMakeCache.txt
 /ALL_BUILD.vcxproj
 /ZERO_CHECK.vcxproj
+build/*
