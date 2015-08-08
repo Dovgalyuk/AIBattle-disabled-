@@ -21,8 +21,8 @@
             $graph .= ",";
             $ticks .= ",";
         }
-        if ($max < $last)
-            $max = $last;
+        if ($max < $day[0])
+            $max = $day[0];
         $graph .= "[" . $day[1] . "," . $day[0] . "]";
         //$graph .= $day[0];
         $ticks .= "'".$day[1]."'";
