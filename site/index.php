@@ -6,7 +6,10 @@
 ?>
 	<div class = "container content" id = "dataContainer">
 
-<?php include("statistics.php"); ?>
+<?php
+    $tournamentId = -1;
+    include("statistics.php");
+?>
 
 		<?php
 			foreach ($news as $data)

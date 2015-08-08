@@ -68,13 +68,16 @@
 		}
 	}
 
-    function strategies_getStatistics($roundId)
+    function strategies_getStatistics($tournament)
     {
-        $roundId = intval($roundId);
+        $tournament = intval($tournament);
         $link = getDBConnection();
         if (mysqli_select_db($link, getDBName()))
         {
-            return mysqli_fetch_all(mysqli_query($link, "SELECT COUNT(*) as cnt, DATE(date) as dt FROM strategies GROUP BY DATE(date)"));
+            $query = "SELECT COUNT(*) as cnt, DATE(date) as dt FROM strategies "
+                     . ($tournament == -1 ? "" : " WHERE tournament=".$tournament)
+                     . " GROUP BY DATE(date)";
+            return mysqli_fetch_all(mysqli_query($link, $query));
         }
     }
 	

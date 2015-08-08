@@ -1,7 +1,7 @@
 <?php
     include_once("procedures.php");
 
-    $stat = strategies_getStatistics(-1);
+    $stat = strategies_getStatistics($tournamentId);
 ?>
 <table class = "table table-bordered">
 <tr style="font-weight:bold;" align = center><td>День</td><td>Загружено стратегий</td></tr>
