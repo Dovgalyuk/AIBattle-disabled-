@@ -508,44 +508,52 @@
 		}
 	}
 	
-	// Регистрация
-	function registerUser($postLogin, $postPassword)
-	{
-		// $_POST['login']
-		// $_POST['password']
-		$link = getDBConnection();
-		$reason = "";
-		if (mysqli_select_db($link, getDBName()))
-		{
-			$err = array();
-			
-			if (!preg_match("/^[a-zA-Z0-9]+$/", $postLogin)) $err[] = "Логин может состоять только из букв английского алфавита и цифр";
-			if (strlen($postLogin) < 3 or strlen($postLogin > 30)) $err[] = "Логин должен быть не меньше 3-х символов и не больше 30";
-			
-			$login =  mysqli_real_escape_string($link, $postLogin);
-			$query = mysqli_query($link, "SELECT COUNT(id) FROM users WHERE login='{$login}'");
-			
-			if (@mysqli_result($query, 0) > 0) $err[] = "Пользователь с таким логином уже существует в базе данных";
-			
-			if (count($err) == 0)
-			{
-				$password = md5(md5(trim($postPassword)));
-				mysqli_query($link, "INSERT INTO users SET login='".$postLogin."', password='$password'");
-				$reason = "Вы зарегистрированы в системе!";
-			}
-			else
-			{
-				$reason = "<b>При регистрации произошли следующие ошибки:</b><br>";
-				foreach($err as $error) $reason = $reason.$error."<br>";
-			}
-		}
-		else $reason = "Нет возможности подключиться к БД!";
-		
-		return $reason;
-	}
-	
-	// Авторизация
-	
+    // Регистрация
+    function registerUser($postLogin, $postPassword)
+    {
+        // $_POST['login']
+        // $_POST['password']
+        $link = getDBConnection();
+        $reason = "";
+        if (mysqli_select_db($link, getDBName()))
+        {
+            $err = array();
+
+            $login = strip_tags($postLogin);
+            if ($login != $postLogin)
+                $err[] = "Логин содержит некорректные символы";
+            $login = mysqli_real_escape_string($link, $login);
+            if (strlen($postLogin) < 3 or strlen($postLogin > 30))
+                $err[] = "Логин должен быть не меньше 3-х символов и не больше 30";
+
+            $query = mysqli_query($link, "SELECT COUNT(id) FROM users WHERE login='{$login}'");
+
+            if (@mysqli_result($query, 0) > 0)
+                $err[] = "Пользователь с таким логином уже существует в базе данных";
+
+            if (count($err) == 0)
+            {
+                $password = md5(md5(trim($postPassword)));
+                mysqli_query($link, "INSERT INTO users SET login='".$postLogin."', password='$password'");
+                $reason = "Вы зарегистрированы в системе!";
+            }
+            else
+            {
+                $reason = "<b>При регистрации произошли следующие ошибки:</b><br>";
+                foreach($err as $error)
+                    $reason = $reason.$error."<br>";
+            }
+        }
+        else
+        {
+            $reason = "Нет возможности подключиться к БД!";
+        }
+
+        return $reason;
+    }
+
+// Авторизация
+
 	// Получение данных о пользователе при авторизации
 	function getAuthorizationData()
 	{
