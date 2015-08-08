@@ -1,5 +1,5 @@
 <?php
-	// Установление ACT-статус у выбраной стратегии выбранного пользователя
+	// РЈСЃС‚Р°РЅРѕРІР»РµРЅРёРµ ACT-СЃС‚Р°С‚СѓСЃ Сѓ РІС‹Р±СЂР°РЅРѕР№ СЃС‚СЂР°С‚РµРіРёРё РІС‹Р±СЂР°РЅРЅРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 	function setActStatus($strategyID, $game, $tournamentId)
 	{
 		$link = getDBConnection();
@@ -13,7 +13,7 @@
 		}
 	}
 		
-	// Получение никнейма по номеру стратегии
+	// РџРѕР»СѓС‡РµРЅРёРµ РЅРёРєРЅРµР№РјР° РїРѕ РЅРѕРјРµСЂСѓ СЃС‚СЂР°С‚РµРіРёРё
 	function getUserIdByStrategy($strategyId)
 	{
 		$link = getDBConnection();
@@ -30,7 +30,7 @@
 		return getNicknameById(getUserIdByStrategy($strategyId));
 	}
 
-	// разукрашивание ячейки
+	// СЂР°Р·СѓРєСЂР°С€РёРІР°РЅРёРµ СЏС‡РµР№РєРё
 	function getStrategyStateColor($state)
 	{
 		$states = array
@@ -43,20 +43,20 @@
 		return $states[$state];
 	}
 	
-	// расшифровка статусов стратегий
+	// СЂР°СЃС€РёС„СЂРѕРІРєР° СЃС‚Р°С‚СѓСЃРѕРІ СЃС‚СЂР°С‚РµРіРёР№
 	function getStrategyStatusRusTip($state)
 	{
 		$states = array
 		(
-			'CE' => "Ошибка компиляции",
+			'CE' => "РћС€РёР±РєР° РєРѕРјРїРёР»СЏС†РёРё",
 			'OK' => "OK",
-			'ACT' => "Текущая стратегия"
+			'ACT' => "РўРµРєСѓС‰Р°СЏ СЃС‚СЂР°С‚РµРіРёСЏ"
 		);
 		
 		return $states[$state];
 	}
 	
-	// получить очки по стратегии
+	// РїРѕР»СѓС‡РёС‚СЊ РѕС‡РєРё РїРѕ СЃС‚СЂР°С‚РµРіРёРё
 	function getScoreByStrategy($roundId, $strategyId)
 	{
 		$link = getDBConnection();
@@ -74,7 +74,7 @@
         $link = getDBConnection();
         if (mysqli_select_db($link, getDBName()))
         {
-            $query = "SELECT COUNT(*) as cnt, DATE(date) as dt FROM strategies "
+            $query = "SELECT COUNT(*) as cnt, DAY(date) as dt FROM strategies "
                      . ($tournament == -1 ? "" : " WHERE tournament=".$tournament)
                      . " GROUP BY DATE(date)";
             return mysqli_fetch_all(mysqli_query($link, $query));

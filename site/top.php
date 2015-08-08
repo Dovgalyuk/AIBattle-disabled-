@@ -14,13 +14,15 @@
 		
 		<link href="./css/mySiteCSS.css" rel="stylesheet">
 		<link href="./css/ui-lightness/jquery-ui-1.10.4.min.css" rel="stylesheet">
-				
+		<link href="./css/jquery.jqplot.css" rel="stylesheet">
+
 		<script src="./ckeditor/ckeditor.js"></script>
 		<script src="./ckeditor/adapters/jquery.js"></script>
-		
-		
+
 		<script src="./js/jquery-1.10.2.min.js"></script>
 		<script src="./js/jquery-ui-1.10.4.min.js"></script>
+		<script src="./js/jquery.jqplot.min.js"></script>
+		<script src="./js/jqplot.barRenderer.min.js"></script>
 		<script src="./js/procedures.js"></script>
                 <script src="./js/bootstrap.min.js"></script>
 	 </head>

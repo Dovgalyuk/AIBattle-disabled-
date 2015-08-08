@@ -7,9 +7,6 @@
 	<?php include("top.php"); ?>
 
 	<div class = "container content">
-<?php
-	include('statistics.php');
-?>
 		<div class="titleName">
 			<?php echo $tournamentData["name"]; ?>
 		</div>
@@ -63,5 +60,9 @@
 			}
 		);
 	</script>
+
+	<div class = "container content">
+            <?php include('statistics.php'); ?>
+        </div>
 	
 	<?php include("bottom.php"); ?>
