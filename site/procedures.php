@@ -493,7 +493,7 @@
             $login = strip_tags($postLogin);
             if ($login != $postLogin)
                 $err[] = "Логин содержит некорректные символы";
-            $login = mysqli_real_escape_string($link, $login);
+            $postLogin = mysqli_real_escape_string($link, $postLogin);
             if (strlen($postLogin) < 3 or strlen($postLogin > 30))
                 $err[] = "Логин должен быть не меньше 3-х символов и не больше 30";
 
