@@ -28,6 +28,7 @@ void saveField(int n)
 {
 	std::ostringstream outs;
     outs << n << "\n";
+
     for (int i = 0; i < n; i++)
     {
         outs << graph[i].size() << " ";
@@ -37,21 +38,22 @@ void saveField(int n)
         }
         outs << "\n";
     }
+
     for (int i = 0; i < n; ++i)
     {
         if (map[i].second != 0)
             outs << i << " " << map[i].second << " " << map[i].first << "\n";
     }
+
 	printField(outs.str());
 }
-
-
 
 void genGraph(int v, int amount)
 {
     int step = rand() % (amount / 3 - num_st[v]) + 1;
     was[v] = true;
-    for (int i = 0; i < step; i++)
+
+    for (int k = 0; k < step; k++)
     {
         cities tmp;
         for (int i = 0; i < n; i++)
@@ -71,6 +73,7 @@ void genGraph(int v, int amount)
                 tmp.push_back(i);
             }
         }
+
         int x = tmp[rand() % tmp.size()];
         graph[v].push_back(x);
         graph[x].push_back(v);
@@ -83,9 +86,10 @@ void genGraph(int v, int amount)
     }
 }
 
-void genMap(int v, int c)
+void genVisibilityZone(int v, int c)
 {
     was[v] = true;
+
     for (int i = 0; i < int(graph[v].size()); i++)
     {
         if (!was[graph[v][i]])
@@ -94,17 +98,45 @@ void genMap(int v, int c)
             verts.push_back(graph[v][i]);
             if (map[graph[v][i]].second == c)
             {
-                genMap(graph[v][i], c);
+                genVisibilityZone(graph[v][i], c);
             }
         }
     }
 }
 
-void was_cl()
+void wasCl()
 {
     for (int i = 0; i < MAX_CITIES; i++)
     {
         was[i] = false;
+    }
+}
+
+void printGraph(std::ostream &outs, int num_player)
+{
+    edges.clear();
+    verts.clear();
+    wasCl();
+
+    int beg;
+    for (int i = 0; i < n; i++)
+    {
+        if (map[i].second == num_player && !was[i])
+        {
+            verts.push_back(i);
+            genVisibilityZone(i, num_player);
+        }
+    }
+
+    outs << verts.size() << " " << edges.size() << "\n";
+    for (int i = 0; i < int(edges.size()); i++)
+    {
+        outs << edges[i].first << " " << edges[i].second << "\n";
+    }
+
+    for (int i = 0; i < int(verts.size()); i++)
+    {
+        outs << verts[i] << " " << map[verts[i]].first << " " << map[verts[i]].second << "\n";
     }
 }
 
@@ -123,14 +155,14 @@ int main(int argc, char **argv)
     else
         srand((unsigned int)time(NULL));
 
-    n = rand() % 30 + 10;
-    genGraph(0, n);
+    n = rand() % 30 + 10; // Number of cities
+    genGraph(0, n); // Generating map
     for (int i = 0; i < n; ++i)
     {
         std::unique(graph[i].begin(), graph[i].end());
     }
-    int first_beg = rand() % n;
-    int second_beg = rand() % n;
+    int first_beg = rand() % n; // First's capital
+    int second_beg = rand() % n; // Second's capital
 
     while (first_beg == second_beg)
     {    
@@ -143,12 +175,13 @@ int main(int argc, char **argv)
     ExecutionResult result = ER_OK;
     for (int move = 0 ; move < MAX_MOVES ; ++move)
     {
-        saveField(n);
+        saveField(n); // Print field
         bool first = move % 2 == 0;
         int num_player = move % 2 + 1;
         std::ostringstream outs;
         outs << num_player << "\n"; 
-        int counter = 0;
+
+        int counter = 0; // How many free scores player has to distribute
         for (int i = 0; i < n; i++)
         {
             if (map[i].second == num_player)
@@ -156,37 +189,21 @@ int main(int argc, char **argv)
                 counter++;
             }
         }
+
         outs << "Phase 1\n";
         outs << counter << "\n";
-        edges.clear();
-        verts.clear();
-        was_cl();
-        int beg;
-        for (int i = 0; i < n; i++)
-        {
-            if (map[i].second == num_player && !was[i])
-            {
-                verts.push_back(i);
-                genMap(i, num_player);
-            }
-        }
-        outs << verts.size() << " " << edges.size() << "\n";
-        for (int i = 0; i < int(edges.size()); i++)
-        {
-            outs << edges[i].first << " " << edges[i].second << "\n";
-        }
-        for (int i = 0; i < int(verts.size()); i++)
-        {
-            outs << verts[i] << " " << map[verts[i]].first << " " << map[verts[i]].second << "\n";
-        }
+        printGraph(outs, num_player);
+
         printInput(first, outs.str());
         std::string output;
+
         result = runProcess(first ? program1 : program2, outs.str(), output, 1000, 64000);
         if (result == ER_OK)
         {
             std::istringstream ins(output);
             int k, v, num, tmp = 0;
             roads list;
+
             ins >> k;
             printLog(first, result, output);
             if (k > int(verts.size()))
@@ -194,7 +211,8 @@ int main(int argc, char **argv)
                 result = ER_IM;
                 return 0;
             }
-            for (int i = 0; i < k; i++)
+
+            for (int i = 0; i < k; i++) // Distributing scores
             {
                 ins >> v >> num;
                 bool t = false;
@@ -214,7 +232,7 @@ int main(int argc, char **argv)
                 list.push_back(std::make_pair(v, num));
                 tmp += num;
             }
-            //check
+            // Check if player distributed all scores
             if (tmp != counter)
             {
                 result = ER_IM;
@@ -224,30 +242,12 @@ int main(int argc, char **argv)
             {
                 map[list[i].first].first += list[i].second;
             }
+
             std::ostringstream outs;
             outs << num_player << "\n";
             outs << "Phase 2\n";
-            edges.clear();
-            verts.clear();
-            was_cl();
-            int beg;
-            for (int i = 0; i < n; i++)
-            {
-                if (map[i].second == num_player && !was[i])
-                {
-                    verts.push_back(i);
-                    genMap(i, num_player);
-                }
-            }
-            outs << verts.size() << " " << edges.size() << "\n";
-            for (int i = 0; i < int(edges.size()); i++)
-            {
-                outs << edges[i].first << " " << edges[i].second << "\n";
-            }
-            for (int i = 0; i < int(verts.size()); i++)
-            {
-                outs << verts[i] << " " << map[verts[i]].first << " " << map[verts[i]].second << "\n";
-            }
+            printGraph(outs, num_player);
+
             std::string output;
             printInput(first, outs.str());
             result = runProcess(first ? program1 : program2, outs.str(), output, 1000, 64000);
@@ -292,33 +292,15 @@ int main(int argc, char **argv)
                 {
                     map[v].first = std::max(1, map[v].first - map[u].first);
                 }
+
                 map[u].first = 1;
                 std::string output;
                 outs.str("");
                 outs.clear();
                 outs << num_player << "\n";
                 outs << "Phase 2\n";
-                edges.clear();
-                verts.clear();
-                was_cl();
-                int beg;
-                for (int i = 0; i < n; i++)
-                {
-                    if (map[i].second == num_player && !was[i])
-                    {
-                        verts.push_back(i);
-                        genMap(i, num_player);
-                    }
-                }
-                outs << verts.size() << " " << edges.size() << "\n";
-                for (int i = 0; i < int(edges.size()); i++)
-                {
-                    outs << edges[i].first << " " << edges[i].second << "\n";
-                }
-                for (int i = 0; i < int(verts.size()); i++)
-                {
-                    outs << verts[i] << " " << map[verts[i]].first << " " << map[verts[i]].second << "\n";
-                }
+                printGraph(outs, num_player);
+
                 printInput(first, outs.str());
                 result = runProcess(first ? program1 : program2, outs.str(), output, 1000, 64000);
                 printLog(first, result, output);
@@ -334,21 +316,27 @@ int main(int argc, char **argv)
                     return 0;
                 }
             }
+            bool isWinning = true;
             for (int i = 0; i < n; i++)
             {
                 if (map[i].second != num_player && map[i].second != 0)
-                    goto go;
+                {
+                    isWinning = false;
+                    break;
+                }
             }
-            result = ER_WIN;
-            printLog(first, result, output);
-            break;
+            if (isWinning)
+            {
+                result = ER_WIN;
+                printLog(first, result, output);
+                break;
+            }
         }
         else
         {
             printLog(first, result, "");
             break;
         }
-        go:;
     }
 
     if (result == ER_OK)
