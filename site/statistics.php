@@ -30,6 +30,13 @@
     }
     if ($max > 0)
     {
+        $yticks = "";
+        for ($i = 0 ; $i <= $max + 1 ; ++$i)
+        {
+            if ($i != 0)
+                $yticks .= ",";
+            $yticks .= "'".$i."'";
+        }
 ?>
 
 <div id="statdiv" style="height:400px;width:<?php echo $count*60;?>px; "></div>
@@ -39,7 +46,8 @@
              { title:'Отправленные стратегии за день',
                series:[{renderer:$.jqplot.BarRenderer,
                        rendererOptions:{barWidth:50}}],
-               axes:{yaxis:{min:0, max:<?php echo $max + 1; ?>},
+               axes:{yaxis:{min:0, max:<?php echo $max + 1; ?>,
+                            ticks:[<?php echo $yticks;?>]},
                      xaxis:{ticks:[<?php echo $ticks;?>]}}
              });
 </script>
