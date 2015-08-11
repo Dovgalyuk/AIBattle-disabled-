@@ -1811,6 +1811,7 @@
 		{
 			$newsId 		= intval($newsId);
 			$currentUserId 	= intval(getActiveUserID());
+			$text = mysqli_real_escape_string($link, $text);
 			if ($currentUserId != -1)
 			{
 				$query = mysqli_query($link, "INSERT INTO newsComments SET news = $newsId, user = $currentUserId, text = '$text', date = NOW()");
