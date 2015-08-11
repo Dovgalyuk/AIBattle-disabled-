@@ -2337,7 +2337,7 @@
     function setUserPatronymic($newName, $id="")
     {
         if (!isActiveUser()) return 4;
-        $newSurname = htmlspecialchars($newSurname);
+        $newName = htmlspecialchars($newName);
         $link = getDBConnection();
         if (mysqli_select_db($link, getDBName()))
         {
