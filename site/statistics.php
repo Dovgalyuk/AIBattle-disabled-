@@ -24,14 +24,13 @@
         if ($max < $day[0])
             $max = $day[0];
         $graph .= "[" . $day[1] . "," . $day[0] . "]";
-        //$graph .= $day[0];
         $ticks .= "'".$day[1]."'";
         ++$count;
     }
     if ($max > 0)
     {
         $yticks = "";
-        for ($i = 0 ; $i <= $max + 1 ; ++$i)
+        for ($i = 0 ; $i <= $max + 1 ; $i += intval(($max + 29) / 30))
         {
             if ($i != 0)
                 $yticks .= ",";
