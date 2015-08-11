@@ -155,12 +155,12 @@ if (!isset($_GET['page']))
 			<td align=center><?php echo getStrategyStatusRusTip($value['status']); ?></td>
 			<td>
 				<div id="source<?php echo $key; ?>">
-                    <a href="javascript://" onclick="$('#source<?php echo $key; ?>').load('getSource.php?id=<?php echo $key; ?>');return false;">Показать код</a>
+                    <a target="_blank" href="getSource.php?id=<?php echo $key; ?>">Показать код</a>
 <?php
             if ($value['status'] == 'CE')
             {
                 echo ' / <a target="_blank" href="getCompileLog.php?id=' . $key . '">Показать лог компиляции</a>';
-            };
+            }
 ?>
 				</div>
             </td>
