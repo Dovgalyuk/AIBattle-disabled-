@@ -63,8 +63,6 @@
             return "Выиграл первый игрок";
         if ($status == "WIN 2")
             return "Выиграл второй игрок";
-        if ($status == "TIE")
-            return "Ничья";
         if ($status == "IM 1")
             return "Неверный ход первого игрока";
         if ($status == "IM 2")
@@ -73,15 +71,17 @@
             return "Ошибка выполнения у первого игрока";
         if ($status == "RE 2")
             return "Ошибка выполнения у второго игрока";
-         if ($status == "TL 1")
+        if ($status == "TL 1")
             return "Превышен лимит по времени у первого игрока";
-         if ($status == "TL 2")
+        if ($status == "TL 2")
             return "Превышен лимит по времени у второго игрока";
-         if ($status == "ML 1")
+        if ($status == "ML 1")
             return "Превышен лимит по памяти у первого игрока";
-         if ($status == "ML 2")
+        if ($status == "ML 2")
             return "Превышен лимит по памяти у второго игрока";
-        if ($status == "IE")
+        if ($status == "TIE")
+            return "Ничья";
+        if (substr($status, 0, 2) == "IE")
             return "Внутренняя ошибка";
         return $status;
     }
