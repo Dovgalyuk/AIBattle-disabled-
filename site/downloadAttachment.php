@@ -10,7 +10,7 @@
 		{
 			$newName = mysqli_result($mysf, 0);
 		
-			$file = addslashes("./attachments/".$_GET['file']);
+			$file = addslashes("./attachments/".$fileId);
 		
 			header ("Content-Type: application/octet-stream");
 			header ("Accept-Ranges: bytes");
