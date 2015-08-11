@@ -9,7 +9,7 @@
         if (!isAdmin())
             $query .= " AND (user = $user)";
 
-        if (mysqli_num_rows(mysqli_query($query)) > 0)
+        if (mysqli_num_rows(mysqli_query($link, $query)) > 0)
         {
             header ("Content-Type: text/plain");
             $file = @file_get_contents("./compilelogs/$id.txt");
