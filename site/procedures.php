@@ -1803,38 +1803,38 @@
 		return $data;
 	}
 	
-	// Отправить комментарий
-	function sendComments($newsId, $text)
-	{
-		$link = getDBConnection();
-		if (mysqli_select_db($link, getDBName()))
-		{
-			$newsId 		= intval($newsId);
-			$currentUserId 	= intval(getActiveUserID());
-			$text = mysqli_real_escape_string($link, $text);
-			if ($currentUserId != -1)
-			{
-				$query = mysqli_query($link, "INSERT INTO newsComments SET news = $newsId, user = $currentUserId, text = '$text', date = NOW()");
-			}
-		}
-	}
+    // Отправить комментарий
+    function sendComments($newsId, $text)
+    {
+        $link = getDBConnection();
+        if (mysqli_select_db($link, getDBName()))
+        {
+            $newsId = intval($newsId);
+            $currentUserId = intval(getActiveUserID());
+            $text = mysqli_real_escape_string($link, htmlspecialchars($text));
+            if ($currentUserId != -1)
+            {
+                $query = mysqli_query($link, "INSERT INTO newsComments SET news = $newsId, user = $currentUserId, text = '$text', date = NOW()");
+            }
+        }
+    }
 	
-	// Изменить комментарий
-	function updateComment($commentId, $text)
-	{
-		$cData = getComment($commentId);
-		if ($cData[0]['user'] == getActiveUserID() || isAdmin() || isModerator())
-		{
-			$link = getDBConnection();
-			if (mysqli_select_db($link, getDBName()))
-			{
-				$commentId 	= intval($commentId);
-				$text 		= mysqli_real_escape_string($link, $text);
-			
-				mysqli_query($link, "UPDATE newsComments SET text = '$text' WHERE id = $commentId");
-			}
-		}
-	}
+    // Изменить комментарий
+    function updateComment($commentId, $text)
+    {
+        $cData = getComment($commentId);
+        if ($cData[0]['user'] == getActiveUserID() || isAdmin() || isModerator())
+        {
+            $link = getDBConnection();
+            if (mysqli_select_db($link, getDBName()))
+            {
+                $commentId = intval($commentId);
+                $text = mysqli_real_escape_string($link, htmlspecialchars($text));
+
+                mysqli_query($link, "UPDATE newsComments SET text = '$text' WHERE id = $commentId");
+            }
+        }
+    }
 	
 	// Удалить комментарий
 	function deleteComment($commentId)

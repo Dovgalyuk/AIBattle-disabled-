@@ -1,3 +1,4 @@
+<?php include_once('procedures.php'); ?>
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -45,7 +46,6 @@
             </div>
             <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-            <li class = "<?php echo getActiveNavbarElement("news", $_SERVER['PHP_SELF']); ?>"><a href="index.php">Новости</a></li>
             <li class="dropdown <?php echo getActiveNavbarElement("tournament", $_SERVER['PHP_SELF']); ?>">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Турниры <b class="caret"></b></a>
             <ul class = "dropdown-menu">

@@ -20,7 +20,7 @@
 				<?php echo reverseDate($data['date'], "-"); ?>
 			</div>
 			<div>
-				<button type="button" class="btn btn-link" onclick="$('#dataContainer').load('comments.php?news=<?php echo $data['id']; ?>');">Comments (<?php echo getCommentsCount($data['id']); ?>)</button>
+				<a href="comments.php?news=<?php echo $data['id']; ?>">Comments (<?php echo getCommentsCount($data['id']); ?>)</a>
 			</div>
 		<?php
 			}

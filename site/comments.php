@@ -1,5 +1,5 @@
+<?php include("top.php"); ?>
 <?php
-	include_once('procedures.php');
 	$newsId = -1;
 	
 	if (isset($_GET['news']))
@@ -17,11 +17,11 @@
 		$postCommentId 	= intval($_POST['commentId']); 
 		if ($postCommentId == -1)
 		{
-			sendComments($postNewsId, $_POST['text']);
+			sendComments($postNewsId, $_POST['userComment']);
 		}
 		else
 		{
-			updateComment($postCommentId, $_POST['text']);
+			updateComment($postCommentId, $_POST['userComment']);
 		}
 	}
 	
@@ -36,22 +36,6 @@
 	function loadCommentData(newsId, commentId)
 	{
 		$('#dataContainer').load('comments.php?news=' + newsId + '&comment=' + commentId);
-	}
-	
-	function loadFormData(newsId, commentId)
-	{
-		var userText = CKEDITOR.instances.userComment.getData();
-		$.post
-		(	"comments.php", 
-			{
-				'newsId' 	: newsId,
-				'text'		: userText,
-				'commentId'	: commentId,
-				'submit'	: true
-			}
-		);
-		
-		loadCommentData(newsId, -1);
 	}
 	
 	function deleteComment(newsId, commentId)
@@ -73,6 +57,8 @@
 		loadCommentData(newsId, commentId);
 	}
 </script>
+
+    <div class = "container content" id = "dataContainer">
 
 	<!-- Новости -->
 	<div class = "boardedHeader">
@@ -99,6 +85,7 @@
 				<?php echo $comment['date']; ?>
 			</div>
 			<?php
+/* enable editing later
 				if ($comment['user'] == getActiveUserID() || isAdmin() || isModerator())
 				{
 			?>
@@ -113,6 +100,7 @@
 					<button type = "submit" name = "delete" onclick = "deleteComment(<?php echo $newsId.",".$comment['id']; ?>); return false;" class = "btn btn-default">Удалить</button>
 			<?php
 				}
+*/
 			?>
 		</div>
 	<?php
@@ -128,17 +116,20 @@
 				$commentText = "Изменить";
 			}
 	?>
-		<form role="form" method="post">
-			<div class="form-group">
-				<label for="userComment" class = "APfont">Ваш комментарий:</label>
-				<textarea id = "userComment" class="form-control" rows="3"><?php if ($commentId != -1) echo getCommentText($commentId); ?></textarea>
-				<script>
-					CKEDITOR.replace('userComment');
-				</script>
-			</div>
-			<button type = "submit" name = "submit" onclick = "loadFormData(<?php echo $newsId.",".$commentId; ?>); return false;" class = "btn btn-default"><?php echo $commentText; ?></button>
-            <button type = "button" onclick="$('body').load('index.php');" class="btn btn-default">Назад</button>
-		</form>
+	<form role="form" method="post">
+		<div class="form-group">
+			<label for="userComment" class = "APfont">Ваш комментарий:</label>
+			<textarea name = "userComment" class="form-control" rows="3"><?php if ($commentId != -1) echo getCommentText($commentId); ?></textarea>
+			<input type=hidden name=newsId value=<?php echo $newsId;?> >
+			<input type=hidden name=commentId value=<?php echo $commentId;?> >
+			<input type=hidden name=submit value=true>
+		</div>
+		<button type = "submit" name = "submit" class = "btn btn-default"><?php echo $commentText; ?></button>
+	</form>
 	<?php
 		}
 	?>
+
+    </div>
+
+<?php include("bottom.php"); ?>
