@@ -29,11 +29,12 @@
 
     function getSubpageTitle($p, $subp, $subp2)
     {
+	$games = getGameList($subp);
     	if ($p == "games")
     	{
     		if ($subp == -1)
     			return "Создание игры";
-    		$game = getGameList($subp)[0];
+    		$game = $games[0];
     		return $game['name'];
     	}
     	if ($p == "news")
@@ -45,12 +46,13 @@
     	} 
     	if ($p == "checkers")
     	{
-    		$game = getGameList($subp2)[0];
+    		$game = $games[0];
     		if ($subp == -1)
     			return "Новый чекер для '" . $game['name'] . "'";
     		if ($subp == 0)
     			return "Чекеры для '" . $game['name'] . "'";
-    		$checker = getCheckerList($subp)[0];
+		$checkers = getCheckerList($subp);
+    		$checker = $checkers[0];
     		return $checker['name'] . " для '" . $game['name'] . "'";
     	}
     	return "";
@@ -227,7 +229,8 @@
 	}
 	else
 	{
-		$game = getGameList($subpage)[0];
+		$games = getGameList($subpage);
+		$game = $games[0];
 		?>
 		<script>
 		function loadFormData()
