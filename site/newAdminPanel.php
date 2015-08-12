@@ -4,7 +4,7 @@
     $subpage = intval($_GET["subpage"]) or 0;
     $subpage2 = intval($_GET["subpage2"]) or 0;
 
-    $pages = array("news", "games", "duels", "tournaments", "rounds", "users", "faq");
+    $pages = array("news", "games", "duels", "tournaments", "users", "faq");
 
     function getRusTitle($p)
     {
@@ -13,7 +13,6 @@
         if ($p == "files") return "Файлы";
         if ($p == "duels") return "Дуэли";
         if ($p == "tournaments") return "Турниры";
-        if ($p == "rounds") return "Раунды";
         if ($p == "users") return "Пользователи";
         if ($p == "faq") return "FAQ";
         if ($p == "checkers") return "checkers";
@@ -518,11 +517,10 @@ else
 <?php
 }
 }
-if ($page == "checkers") // Страница чекеров
-{
-?>
-<?php
-} 
+    if ($page == "tournaments") // Страница чекеров
+    {
+        include("admin/tournaments.php");
+    } 
     if ($page == "users") // Страница пользователей
     {
         include("admin/users.php");

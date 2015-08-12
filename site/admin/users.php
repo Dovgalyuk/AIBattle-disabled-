@@ -1,9 +1,6 @@
-<?php
-    $users = getUsersList(false, true);
-?>
-    <script>
-        changeActiveAdminButton('usersButton');
-    </script>
+<script>
+    changeActiveAdminButton('usersButton');
+</script>
 
 <table class="table table-hover">
 <thead>
@@ -18,6 +15,7 @@
 </thead>
 <tbody>
 <?php
+    $users = getTournamentsList();
     foreach ($users as $user)
     {
         if ($user['group'] == "banned")
