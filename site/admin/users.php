@@ -9,7 +9,7 @@
 <thead>
 <tr>
 <td>ID</td>
-<td>Никнэйм</td>
+<td>Логин</td>
 <td>Роль</td>
 <td>Фамилия</td>
 <td>Имя</td>
