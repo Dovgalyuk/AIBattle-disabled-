@@ -44,13 +44,13 @@
 		
 		function loadFormData(questionId)
 		{
-			var currentQuestion = CKEDITOR.instances.questionDescription.getData();
-			var currentAnswer 	= CKEDITOR.instances.answerDescription.getData();
+			var currentQuestion = document.getElementById("questionDescription).value;
+			var currentAnswer = document.getElementById("answerDescription).value;
 			
 			var faqData = 
 		{		'questionId' 	: questionId,
-				'question' 		: currentQuestion,
-				'answer'		: currentAnswer
+				'question' 	: currentQuestion,
+				'answer'	: currentAnswer
 			};
 			
 			if (questionId == -1)
@@ -159,9 +159,6 @@
 			<div class="form-group">
 				<label for="questionDescription" class = "APfont">Описание вопроса:</label>
 				<textarea id = "questionDescription" class="form-control" rows="3"><?php if ($questionId != -1) echo trim($currentQuestion['question']);?></textarea>
-				<script>
-					CKEDITOR.replace('questionDescription');
-				</script>
 			</div>
 			
 			<br>
@@ -174,9 +171,6 @@
 			<div class="form-group">
 				<label for="answerDescription" class = "APfont">Ответ на вопрос:</label>
 				<textarea id = "answerDescription" class="form-control" rows="3"><?php if ($questionId != -1 && $currentQuestion['answer'] != null) echo trim($currentQuestion['answer']);?></textarea>
-				<script>
-					CKEDITOR.replace('answerDescription');
-				</script>
 			</div>
 			<br>
 			<div class="btn-group">

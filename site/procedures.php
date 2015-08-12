@@ -1872,7 +1872,7 @@
 		if (mysqli_select_db($link, getDBName()))
 		{
 			$currentUserId 	= intval(getActiveUserID());
-			$text 			= mysqli_real_escape_string($link, $text);
+			$text = mysqli_real_escape_string($link, htmlspecialchars($text));
 			
 			if (mysqli_query($link, "INSERT INTO userQuestions SET user = $currentUserId, question = '$text', status = 'opened'"))
 				return 0;
@@ -1940,8 +1940,8 @@
 		$data = array();
 		if (mysqli_select_db($link, getDBName()))
 		{
-			$answer 		= mysqli_real_escape_string($link, $answer);
-			$question 		= mysqli_real_escape_string($link, $question);
+			$answer = mysqli_real_escape_string($link, htmlspecialchars($answer));
+			$question = mysqli_real_escape_string($link, htmlspecialchars($question));
 			$currentUserId 	= intval(getActiveUserID());
 			
 			if (mysqli_query($link, "INSERT INTO userQuestions SET user = $currentUserId, question = '$question', answer = '$answer', status = 'answered'"))

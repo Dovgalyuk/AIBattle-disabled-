@@ -2,19 +2,19 @@
 <?php include("top.php"); ?>
 
 <script>
-	function sendQuestion()
-	{
-		$.post
-		(
-			"jqueryFaqSendQuestion.php",
-			{'userQuestion' : CKEDITOR.instances.userQuestion.getData()},
-			function (data)
-			{
-				showModalAlert(data);
-				window.location.reload();
-			}
-		);
-	}
+    function sendQuestion()
+    {
+        $.post
+        (
+            "jqueryFaqSendQuestion.php",
+            {'userQuestion' : document.getElementById('userQuestion').value },
+            function (data)
+            {
+                showModalAlert(data);
+                window.location.reload();
+            }
+        );
+    }
 </script>
 
 	<div class = "container content">
@@ -48,9 +48,6 @@
 				<div class="form-group">
 					<label for="userQuestion" class = "APfont">Ваш вопрос:</label>
 					<textarea id = "userQuestion" name = "userQuestion" class="form-control" rows="3"></textarea>
-					<script>
-						CKEDITOR.replace('userQuestion');
-					</script>
 				</div>
 				<button type = "submit" name = "submit" class = "btn btn-default" onclick = "sendQuestion(); return false;">Отправить</button>
 			</form>
