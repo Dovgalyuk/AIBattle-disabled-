@@ -15,7 +15,6 @@
         if ($p == "tournaments") return "Турниры";
         if ($p == "users") return "Пользователи";
         if ($p == "faq") return "FAQ";
-        if ($p == "checkers") return "checkers";
         return "";
     }
 
@@ -57,7 +56,38 @@
         return "";
     }
 
+    function printTitleItem($name, $link)
+    {
+        if ($link == "")
+            echo '<li class="active">'.$name.'</li>';
+        else
+            echo '<li><a href="'.$link.'">'.$name.'</a></li>';
+    }
 
+    function printPageTitle()
+    {
+        $page = $_GET["page"] or "";
+        if ($page == "")
+        {
+            printTitleItem("Главная", "");
+        }
+        else
+        {
+            printTitleItem("Главная", "?page=");
+            if ($page == "tournament")
+            {
+                $tour = getTournamentData($_GET["id"]);
+                printTitleItem(getRusTitle("games"), "?page=games");
+                printTitleItem(getGameName($tour['game']), "?page=game&id=".$tour['game']);
+                printTitleItem(getRusTitle("tournaments"), "?page=tournaments");
+                printTitleItem($tour['name'], "");
+            }
+            else
+            {
+                printTitleItem(getRusTitle($page), "");
+            }
+        }
+    }
     if (isAdmin())
     {
 ?>
@@ -123,46 +153,11 @@
 <div class="container-fluid">
 <ol class="breadcrumb">
 <?php
-    if (getRusTitle($page) != "")
-    {
-        if (($subpage == 0) && ($subpage2 == 0))
-        {
-?>
-        <li><a href="?page=">Главная</a></li>
-        <li class="active"><?php echo getRusTitle($page) ?></li>
-<?php
-        }
-        else
-        {
-            ?>
-            <li><a href="?page=">Главная</a></li>
-            <?php
-                if (getAlternativePage($page) == "")
-                {
-            ?>
-                <li><a href="?page=<?php echo $page; ?>"><?php echo getRusTitle($page); ?></a></li>
-            <?php
-                }
-                else
-                {
-            ?>
-                <li><a href="?page=<?php echo getAlternativePage($page); ?>"><?php echo getRusTitle(getAlternativePage($page)); ?></a></li>
-            <?php
-                }
-            ?>
-            <li class="active"><?php echo getSubpageTitle($page, $subpage, $subpage2) ?></li>
-
-            <?php
-        }
-    } else
-    {
-?>
-        <li class="active">Главная</li>
-<?php
-    }
+    printPageTitle();
 ?>
 </ol>
-<?php if ($page == "games") // Страница игр
+<?php 
+    if ($page == "games") // Страница игр
     {
 ?>
 <script type="text/javascript">
@@ -517,15 +512,19 @@ else
 <?php
 }
 }
-    if ($page == "tournaments") // Страница чекеров
+    if ($page == "tournaments")
     {
         include("admin/tournaments.php");
     } 
-    if ($page == "users") // Страница пользователей
+    else if ($page == "tournament")
+    {
+        include("admin/tournament.php");
+    } 
+    else if ($page == "users") // Страница пользователей
     {
         include("admin/users.php");
     }
-    if ($page == "") // Главная
+    else if ($page == "") // Главная
     {
 ?>
 <h3>Статус сервера

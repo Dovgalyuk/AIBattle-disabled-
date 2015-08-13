@@ -17,9 +17,9 @@
     foreach($tours as $tour)
     {
         echo '<tr>';
-        echo '<td><a href="newAdminPanel.php?page=tournament?id='.$tour['id'].'"</a>'
+        echo '<td><a href="newAdminPanel.php?page=tournament&id='.$tour['id'].'"</a>'
             . $tour['name'] .'</td>';
-        echo '<td>'.$tour['game'].'</td>';
+        echo '<td>'.getGameName($tour['game']).'</td>';
         echo '<td>'.$tour['defaultChecker'].'</td>';
         echo '<td>'.$tour['state'].'</td>';
         echo '</tr>';
