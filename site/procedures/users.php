@@ -263,4 +263,23 @@
         return $data;
     }
 
+    function getUsersWithStrategies($tournament)
+    {
+        $tournament = intval($tournament);
+        $link = getDBConnection();
+        mysqli_select_db($link, getDBName());
+        $q = "SELECT users.id as id, users.login as login FROM users "
+             . " INNER JOIN strategies ON users.id = strategies.user "
+             . " WHERE `group` != 'banned' AND strategies.tournament = $tournament"
+             . " GROUP BY id ORDER BY login";
+        $data = array();
+        if ($query = mysqli_query($link, $q))
+        {
+            while ($row = mysqli_fetch_assoc($query))
+                $data[] = $row;
+            mysqli_free_result($query);
+        }
+        return $data;
+    }
+    
 ?>

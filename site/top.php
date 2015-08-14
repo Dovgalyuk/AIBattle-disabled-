@@ -86,21 +86,11 @@
                 </ul>
             </li>
             -->
-            <li class = "<?php echo getActiveNavbarElement("faq", $_SERVER['PHP_SELF']); ?>"><a href="faq.php">Помощь</a></li>
             <?php
                 if (isAdmin())
                 {
             ?>
                 <li class = "<?php echo getActiveNavbarElement("adminPanel", $_SERVER['PHP_SELF']); ?>"><a href="adminPanel.php">Управление</a></li>
-                <?php
-                    $questionCount = getOpenedQuestionCount();
-                    if ($questionCount != 0)
-                    {
-                ?>
-                    <li><a href="adminPanel.php?mode=faq"><span class="glyphicon glyphicon-question-sign"></span> (<?php echo $questionCount ;?>)</a></li>
-                <?php
-                    }
-                ?>
             <?php
                 }
             ?>

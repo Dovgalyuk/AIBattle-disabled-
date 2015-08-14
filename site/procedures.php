@@ -1,6 +1,6 @@
 <?php
     include_once("procStrategies.php");
-    include_once("procUsers.php");
+    include_once("procedures/users.php");
     include_once("procedures/tournaments.php");
 
     session_start();
