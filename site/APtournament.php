@@ -3,7 +3,7 @@
 	
 	$_SESSION['adminPanelState'] = 'APtournament.php';
 	
-	if (isAdmin)
+	if (isAdmin())
 	{
 	
 		$tournamentId 	= -1;

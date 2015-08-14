@@ -104,6 +104,10 @@
     // создать турнир
     function createNewTournament($name, $game, $description, $state, $checker)
     {
+        if (!isAdmin())
+        {
+            return 3;
+        }
         $link = getDBConnection();
         if (mysqli_select_db($link, getDBName()))
         {
@@ -124,6 +128,10 @@
     // обновить турнир
     function updateTournament($id, $name, $game, $description, $state, $checker)
     {
+        if (!isAdmin())
+        {
+            return 3;
+        }
         $link = getDBConnection();
         if (mysqli_select_db($link, getDBName()))
         {
@@ -145,6 +153,10 @@
     // удалить турнир
     function deleteTournament($id)
     {
+        if (!isAdmin())
+        {
+            return 3;
+        }
         $link = getDBConnection();
         if (mysqli_select_db($link, getDBName()))
         {
