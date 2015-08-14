@@ -10,7 +10,12 @@
 		$tournamentId = intval($_POST['tournamentId']);
 		$extension = mysqli_real_escape_string($link, getFileExtension($fileInputName));
 	
-		mysqli_query($link, "INSERT INTO strategies SET user = ".intval(getActiveUserID()).", game = ".$id.", language = '".$extension."', tournament = ".$tournamentId);
+        $success = mysqli_query($link, "INSERT INTO strategies SET user = ".intval(getActiveUserID()).", game = ".$id.", language = '".$extension."', tournament = ".$tournamentId);
+        if (!$success)
+        {
+            echo "Ошибка записи в БД!";
+            exit;
+        }
 		$strategy = mysqli_insert_id($link);
 
 		saveFileOnDisc2(addslashes("./executions/").$strategy, $fileInputName);
