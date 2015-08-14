@@ -152,6 +152,7 @@
         foreach ($pages as $p)
         {
             echo '<li class="' . ((($page == $p) || (getAlternativePage($page) == $p))?'active':'') . '"><a href="?page=' . $p . '">' . getRusTitle($p) . '</a></li>';
+            //echo '<li><ul class="sidebar-brand"><li>тест<ul class="sidebar-brand"><li>тест</li></ul></li></ul></li>';
         }
     ?>
 
