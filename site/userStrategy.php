@@ -38,7 +38,7 @@
     $id = intval($_GET['id']);
     $tournamentId = intval($_GET['tournament']);
     $tournamentData = getTournamentData($tournamentId);
-    $tournamentRunning =  $tournamentData['state'] == 'running';
+    $tournamentRunning =  ($tournamentData['state'] == 'running') || isAdmin();
     $_SESSION['tournamentState'] = 'userStrategy.php';	
     $user = (isAdmin() && isset($_GET['uid']))
                 ? intval($_GET['uid'])
