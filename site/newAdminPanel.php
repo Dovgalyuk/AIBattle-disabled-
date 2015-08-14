@@ -15,7 +15,6 @@
         if ($p == "tournaments") return "Турниры";
         if ($p == "users") return "Пользователи";
         if ($p == "faq") return "FAQ";
-        if ($p == "checkers") return "checkers";
         return "";
     }
 
@@ -57,7 +56,47 @@
         return "";
     }
 
+    function printTitleItem($name, $link)
+    {
+        if ($link == "")
+            echo '<li class="active">'.$name.'</li>';
+        else
+            echo '<li><a href="'.$link.'">'.$name.'</a></li>';
+    }
 
+    function printPageTitle()
+    {
+        $page = $_GET["page"] or "";
+        if ($page == "")
+        {
+            printTitleItem("Главная", "");
+        }
+        else
+        {
+            printTitleItem("Главная", "?page=");
+            if ($page == "tournament")
+            {
+                $tour = getTournamentData($_GET["id"]);
+                printTitleItem(getRusTitle("games"), "?page=games");
+                printTitleItem(getGameName($tour['game']), "?page=game&id=".$tour['game']);
+                printTitleItem(getRusTitle("tournaments"), "?page=tournaments");
+                printTitleItem($tour['name'], "");
+            }
+            else if ($page == "games")
+            {
+                printTitleItem(getRusTitle("games"), "");
+            }
+            else if ($page == "game")
+            {
+                printTitleItem(getRusTitle("games"), "?page=games");
+                printTitleItem(getGameName($_GET["id"]), "");
+            }
+            else
+            {
+                printTitleItem(getRusTitle($page), "");
+            }
+        }
+    }
     if (isAdmin())
     {
 ?>
@@ -113,6 +152,7 @@
         foreach ($pages as $p)
         {
             echo '<li class="' . ((($page == $p) || (getAlternativePage($page) == $p))?'active':'') . '"><a href="?page=' . $p . '">' . getRusTitle($p) . '</a></li>';
+            //echo '<li><ul class="sidebar-brand"><li>тест<ul class="sidebar-brand"><li>тест</li></ul></li></ul></li>';
         }
     ?>
 
@@ -123,409 +163,35 @@
 <div class="container-fluid">
 <ol class="breadcrumb">
 <?php
-    if (getRusTitle($page) != "")
-    {
-        if (($subpage == 0) && ($subpage2 == 0))
-        {
-?>
-        <li><a href="?page=">Главная</a></li>
-        <li class="active"><?php echo getRusTitle($page) ?></li>
-<?php
-        }
-        else
-        {
-            ?>
-            <li><a href="?page=">Главная</a></li>
-            <?php
-                if (getAlternativePage($page) == "")
-                {
-            ?>
-                <li><a href="?page=<?php echo $page; ?>"><?php echo getRusTitle($page); ?></a></li>
-            <?php
-                }
-                else
-                {
-            ?>
-                <li><a href="?page=<?php echo getAlternativePage($page); ?>"><?php echo getRusTitle(getAlternativePage($page)); ?></a></li>
-            <?php
-                }
-            ?>
-            <li class="active"><?php echo getSubpageTitle($page, $subpage, $subpage2) ?></li>
-
-            <?php
-        }
-    } else
-    {
-?>
-        <li class="active">Главная</li>
-<?php
-    }
+    printPageTitle();
 ?>
 </ol>
-<?php if ($page == "games") // Страница игр
+<?php 
+    if ($page == "games") // Страница игр
     {
-?>
-<script type="text/javascript">
-    function deleteGame(id)
-    {
-        id = id || <?php echo $subpage; ?>;
-        
-        $.post
-        (
-            "jqueryGame.php",
-            {
-                'gameId'        : id,
-                'deleteGame'    : true
-            },
-            function (data)
-            {
-                showModalAlert(data);
-                window.location.search = "?page=games";
-            }
-        );
+        include("admin/games.php");
     }
-</script>
-<?php
-        if ($subpage == 0)
-        {
-            $gameList = getGameList();
-?>
-
-<table class="table">
-<caption>Игры</caption>
-<thead>
-<tr>
-<td>ID</td>
-<td>Название</td>
-<td></td>
-</tr>
-</thead>
-<tbody>
-<?php
-    foreach ($gameList as $game)
+    else if ($page == "game")
     {
-        echo "<tr>";
-        echo "<td>" . $game['id'] . "</td>";
-        echo "<td>" . $game['name'] . "</td>";
-        echo "<td>";
-        echo '<div class="btn-group">';
-        echo '<a href="?page=checkers&subpage2=' . $game['id'] . '" role="button" class="btn btn-default">Чекеры</a>';
-        echo '<button class="btn btn-default">Файлы</button>';
-        echo '<a href="?page=' . $page . '&subpage=' . $game['id'] . '" role="button" class="btn btn-default">Редактировать</a>';
-        echo '<button class="btn btn-danger" onclick="deleteGame(' . $game['id'] . ')">Удалить</button>';
-        echo "</div></td>";
-        echo "</tr>";
+        include("admin/game.php");
     }
-?>
-</tbody>
-</table>
-
-<a role="button" href="?page=<?php echo $page; ?>&subpage=-1" style="float: right" class="btn btn-primary">
-Создать игру
-</a>
-
-<?php
-    }
-    else
+    else if ($page == "news") // Страница новостей
     {
-        $games = getGameList($subpage);
-        $game = $games[0];
-        ?>
-        <script>
-        function loadFormData()
-        {
-            var gameSelectorValue = <?php echo $subpage; ?>;
-            
-            var gameName = document.getElementById('gameName').value;
-            var gameDescription = CKEDITOR.instances.gameDescription.getData();
-            var timeLimit = document.getElementById('gameTurnTime').value;
-            var memoryLimit = document.getElementById('gameMemoryLimit').value;
-            
-            if (gameName != '')
-            {
-            
-                var form = new FormData();
-                form.append('gameId', gameSelectorValue);
-                form.append('gameName', gameName);
-                form.append('gameDescription', gameDescription);
-                form.append('timeLimit', timeLimit);
-                form.append('memoryLimit', memoryLimit);
-                
-                if ($('#uploadVisualizerFile')[0].files[0])
-                {
-                    form.append('visualizerPath', 'uploadVisualizerFile');
-                    form.append('uploadVisualizerFile', $('#uploadVisualizerFile')[0].files[0]);
-                }
-                form.append(gameSelectorValue == -1 ? 'createGame' : 'updateGame', true);
-                
-                $.ajax({
-                    url: 'jqueryGame.php',
-                    type: 'POST',
-                    success: function (data)
-                    {   
-                        showModalAlert(data);
-                        window.location.search = "?page=games";
-                    },
-                    data: form,
-                    cache: false,
-                    contentType: false,
-                    processData: false
-                });
-            }
-            else showModalAlert('Название игры не может быть пустым!');
-        }
-        function deleteVisualizer()
-        {
-            var gameSelectorValue = <?php echo $subpage; ?>;
-            
-            $.post
-            (
-                "jqueryGame.php",
-                {
-                    'gameId'            : gameSelectorValue,
-                    'deleteVisualizer'  : true
-                },
-                function (data)
-                {
-                    showModalAlert(data);
-                    window.location.reload();
-                }
-            );
-        }
-        </script>
-        <div class="form-group">
-            <label for="gameName">Название игры</label>
-            <input id="gameName" class="form-control" placeholder="Введите название игры" value="<?php
-            if ($subpage != -1)
-                echo $game['name'];
-        ?>" />
-        </div>
-        <div class="form-group">
-        <label for="gameDescription">Описание игры</label>
-        <textarea id = "gameDescription" class="form-control" rows="3"><?php if ($subpage != -1) echo trim($game['description']);?></textarea>
-            <script>
-                CKEDITOR.replace('gameDescription');
-            </script>
-
-        </div>
-        <div class="form-group">
-        <?php if ($game['hasVisualizer'] && $subpage != -1) 
-            { 
-        ?>
-            <label><i>Визуализатор в наличии!</i></label>
-            <br>
-        <?php 
-            } 
-        ?>
-        <label for = "uploadVisualizerFile" class = "APfont">Визуализатор <?php if ($game['hasVisualizer'] && $subpage != -1) { ?> (обновление) <?php } ?>:</label>
-        <input type = "file" id = "uploadVisualizerFile">
-        <?php
-            if ($game['hasVisualizer'] && $subpage != -1)
-            {
-        ?>
-            <br>
-            <button type = "submit" name = "submit" onclick = "deleteVisualizer(); return false;" class = "btn btn-default">Удалить визуализатор</button>
-        <?php
-            }
-        ?>
-        <br />
-        <div class="form-group">
-            <label for="gameTurnTime" class = "APfont">Время хода (ms):</label>
-            <input type="text" class="form-control" id="gameTurnTime" placeholder="Введите ограничение времени на ход" value = "<?php if ($subpage != -1) echo $game['timeLimit']; ?>">
-        </div>
-        <br>
-        <div class="form-group">
-            <label for="gameMemoryLimit" class = "APfont">Лимит памяти (kb):</label>
-            <input type="text" class="form-control" id="gameMemoryLimit" placeholder="Введите ограничение стратегии по памяти" value = "<?php if ($subpage != -1) echo $game['memoryLimit']; ?>">
-        </div>
-        <div class="btn-group">
-            <button type = "submit" name = "submit" onclick = "loadFormData(); return false;" class = "btn btn-default">
-                <?php
-                    if ($subpage == -1)
-                        echo 'Создать игру';
-                    else
-                        echo 'Применить изменения';
-                ?>
-            </button>
-            <?php
-                if ($subpage != -1)
-                {
-            ?>
-            <button onclick="deleteGame(); return false;" class="btn btn-default">Удалить игру</button>
-            <?php
-                }
-            ?>
-        </div>
-    </div>
-        <?php
+        include("admin/news.php");
     }
-    };
-    if ($page == "news") // Страница новостей
-    {
-   ?>
-
-<script type="text/javascript">
-    function deleteNews(currentNews)
-    {
-        window.location.search = "?page=news";
-        var currentNews = currentNews || <?php echo $subpage; ?>;
-        $.post
-        (
-            "jqueryNews.php",
-            {
-                'newsId'        : currentNews,
-                'deleteNews'    : true
-            },
-            function (data)
-            {
-                showModalAlert(data);
-            }
-        );  
-        
-    }
-</script>
-   <?php
-        if ($subpage == 0)
-        {
-            $newsList = getNewsData();
-?>
-
-
-<table class="table">
-<caption>Новости</caption>
-<thead>
-<tr>
-<td>Заголовок</td>
-<td>Дата</td>
-<td></td>
-</tr>
-</thead>
-<tbody>
-<?php
-    foreach ($newsList as $news)
-    {
-        echo "<tr>";
-        echo "<td>" . $news['header'] . "</td>";
-        echo "<td>" . $news['date'] . "</td>";
-        echo "<td><div class=\"btn-group\">";
-        echo '<a href="?page=' . $page . '&subpage=' . $news['id'] . '" role="button" class="btn btn-default">Редактировать</a>';
-        echo '<button class="btn btn-danger" onclick="deleteNews(' . $news['id'] . ')">Удалить</button>';
-        echo "</div></td>";
-        echo "</tr>";
-    }
-?>
-</tbody>
-</table>
-
-<a role="button" href="?page=<?php echo $page; ?>&subpage=-1" style="float: right" class="btn btn-primary">
-Создать новость
-</a>
-<?php
-}
-else
-{
-    $currentNews = getNewsData($subpage);
-    $date = '';
-    if ($subpage == -1)
-    {
-        $date[0] = date("Y");
-        $date[1] = date("m");
-        $date[2] = date("d");
-    }
-    else
-    {
-        $date = explode("-", $currentNews["date"]);
-    }
-    ?>
-    <script type="text/javascript">
-        function loadFormData()
-        {
-            var currentNews         = <?php echo $subpage; ?>;
-            var currentTitle        = document.getElementById('newsHeader').value;
-            var currentText         = CKEDITOR.instances.newsDescription.getData();
-            var currentDate         = document.getElementById('datepicker').value;
-            
-            if (currentTitle != '')
-            {
-                var newsData = {'newsId' : currentNews, 'header' : currentTitle, 'text' : currentText, 'date' : currentDate};
-                
-                if (currentNews == -1)
-                    newsData['createNews'] = true;
-                else
-                    newsData['updateNews'] = true;
-                
-                $.post
-                (   "jqueryNews.php", 
-                    newsData,
-                    function (data)
-                    {
-                        showModalAlert(data);
-                        window.location.search = "?page=news";
-                    }
-                );
-            }
-            else showModalAlert('Заголовок новости не должен быть пустым!');
-        }
-    </script>
-                <div class="form-group">
-                <label for="newsHeader">Заголовок новости:</label>
-                <input type="text" class="form-control" id="newsHeader" placeholder="Введите заголовок" value = "<?php if ($nsubpage != -1) echo $currentNews['header']; ?>">
-            </div>
-            <br>
-            <div class="form-group">
-                <label for="newsDescription">Описание новости:</label>
-                <textarea id = "newsDescription" class="form-control" rows="3"><?php if ($subpage != -1) echo trim($currentNews['text']);?></textarea>
-                <script>
-                    CKEDITOR.replace('newsDescription');
-                </script>
-            </div>
-            <br>
-            <br>
-            <div class="form-group">
-                <label for="date">Дата новости:</label>
-                <input type="text" name="date" value="<?php echo $date[2]."/".$date[1]."/".$date[0];?>" id="datepicker">
-                <script type="text/javascript">
-                    $(
-                        function() 
-                        {
-                            $("#datepicker").datepicker({
-                                yearRange: "1990:2016",
-                                dateFormat: "dd/mm/yy"
-                            });
-                        }
-                    );
-                </script>
-            </div>
-            <div class="btn-group">
-                <button type = "submit" name = "submit" onclick = "loadFormData(); return false;" class = "btn btn-default">
-                    <?php
-                        if ($subpage == -1)
-                            echo 'Создать новость';
-                        else
-                            echo 'Применить изменения';
-                    ?>
-                </button>
-                <?php
-                    if ($subpage!= -1)
-                    {
-                ?>
-                <button type = "submit" name = "submit" onclick = "deleteNews(); return false;" class = "btn btn-default">Удалить новость</button>
-                <?php
-                    }
-                ?>
-            </div>
-<?php
-}
-}
-    if ($page == "tournaments") // Страница чекеров
+    else if ($page == "tournaments")
     {
         include("admin/tournaments.php");
     } 
-    if ($page == "users") // Страница пользователей
+    else if ($page == "tournament")
+    {
+        include("admin/tournament.php");
+    } 
+    else if ($page == "users") // Страница пользователей
     {
         include("admin/users.php");
     }
-    if ($page == "") // Главная
+    else if ($page == "") // Главная
     {
 ?>
 <h3>Статус сервера

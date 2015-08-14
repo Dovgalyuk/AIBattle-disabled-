@@ -2,62 +2,62 @@
 
 function changeActiveAdminButton(state)
 {
-	var adminButtons = 
-	[
-		'tournamentButton', 'gameButton', 'roundsButton', 
-		'checkersButton', 'attachmentsButton', 'usersButton', 
-		'newsButton', 'faqButton', 'duelsButton', 'imageUploadButton',
-		'imageViewerButton'
-	];
-	
-	
-	//console.log(state + ':');
-	
-	adminButtons.forEach
-	(
-		function check(button)
-		{
-			
-			//console.log(button);
-			if (state == button)
-			{
-				$('#' + button).removeClass("btn-default").addClass("btn-info");
-			}
-			else if ($('#' + button).hasClass("btn-info")) 
-			{
-				$('#' + button).removeClass("btn-info").addClass("btn-default");
-			}
-			
-		}
-	);
+    var adminButtons = 
+    [
+        'tournamentButton', 'gameButton', 'roundsButton', 
+        'checkersButton', 'attachmentsButton', 'usersButton', 
+        'newsButton', 'faqButton', 'duelsButton', 'imageUploadButton',
+        'imageViewerButton'
+    ];
+    
+    
+    //console.log(state + ':');
+    
+    adminButtons.forEach
+    (
+        function check(button)
+        {
+            
+            //console.log(button);
+            if (state == button)
+            {
+                $('#' + button).removeClass("btn-default").addClass("btn-info");
+            }
+            else if ($('#' + button).hasClass("btn-info")) 
+            {
+                $('#' + button).removeClass("btn-info").addClass("btn-default");
+            }
+            
+        }
+    );
 }
 
 // переключение активной кнопки в турнирах
 function changeActiveTournamentButton(state)
 {
-	var tournamentButtons = 
-	[
-		'gameButton', 'roundButton',
-		'stategyButton', 'trainingButton'
-	];
-	
-	tournamentButtons.forEach
-	(
-		function check(button)
-		{
-			if (document.getElementById(button))
-			{
-				if (state == button)
-				{
-					$('#' + button).removeClass("btn-default").addClass("btn-info");
-				}
-				else if ($('#' + button).hasClass("btn-info")) 
-				{
-					$('#' + button).removeClass("btn-info").addClass("btn-default");
-				}
-			}
-		}
-	);
+    var tournamentButtons = 
+    [
+        'gameButton', 'roundButton',
+        'stategyButton', 'trainingButton'
+    ];
+    
+    tournamentButtons.forEach
+    (
+        function check(button)
+        {
+            if (document.getElementById(button))
+            {
+                if (state == button)
+                {
+                    $('#' + button).removeClass("btn-default").addClass("btn-info");
+                }
+                else if ($('#' + button).hasClass("btn-info")) 
+                {
+                    $('#' + button).removeClass("btn-info").addClass("btn-default");
+                }
+            }
+        }
+    );
 }
 
 function showModalAlert(message)
@@ -69,4 +69,20 @@ function showModalAlert(message)
     var modal = $(s1 + message + s2)
     $('body').append(modal)
     $('.modal').modal()*/
+}
+
+function setSelectedIndexInSelector(selector, selectedData)
+{
+    var selector = document.getElementById(selector); 
+    if (selectedData != -1)
+    {
+        for (var i = 0; i < selector.options.length; i++)
+        {
+            if (selector.options[i].value == selectedData)
+            {
+                selector.selectedIndex = i;
+                break;
+            }
+        }
+    }
 }

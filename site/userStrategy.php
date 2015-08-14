@@ -89,13 +89,13 @@
             <?php echo getNicknameById($user); ?>
         </option>
 <?php
-        $users = getUsersList(true);
+        $users = getUsersWithStrategies($tournamentId);
         foreach ($users as $field)
         {
             if ($field['id'] != $user)
                 echo '<option '.(($field['id'] == $user) ? 'selected ' : '')
                      .'value='.strval($field['id']).'>'
-                     .getNicknameById($field['id']).'</option>';
+                     .$field['login'].'</option>';
         }
 ?>
 </select>

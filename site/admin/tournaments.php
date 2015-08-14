@@ -16,11 +16,12 @@
     $tours = getTournamentList();
     foreach($tours as $tour)
     {
+        $checker = getCheckerList($tour['defaultChecker']);
         echo '<tr>';
-        echo '<td><a href="newAdminPanel.php?page=tournament?id='.$tour['id'].'"</a>'
+        echo '<td><a href="?page=tournament&id='.$tour['id'].'"</a>'
             . $tour['name'] .'</td>';
-        echo '<td>'.$tour['game'].'</td>';
-        echo '<td>'.$tour['defaultChecker'].'</td>';
+        echo '<td><a href="?page=games&id='.$tour['game'].'">'.getGameName($tour['game']).'</a></td>';
+        echo '<td>'.$checker[0]['name'].'</td>';
         echo '<td>'.$tour['state'].'</td>';
         echo '</tr>';
     }
