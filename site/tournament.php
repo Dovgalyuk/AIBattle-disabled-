@@ -24,7 +24,7 @@
 					}
 				?>
 				<?php
-					if (isActiveUser() && $tournamentData['state'] == 'running')
+					if ((isActiveUser() && $tournamentData['state'] == 'running') || (isAdmin()))
 					{
 				?>
 					<button type="button" id="trainingButton" class="btn btn-default" onclick="$('#dataContainer').load('training.php?id=<?php echo $tournamentData['game']; ?>&tournament=<?php echo $tournamentId; ?>');">Тренировка</button>

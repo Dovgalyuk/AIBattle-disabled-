@@ -7,7 +7,7 @@
         
         if (mysqli_select_db($link, getDBName()))
         {
-            $query = mysqli_query($link, "SELECT id, name FROM tournaments WHERE state = 'running' OR state = 'closed'");
+            $query = mysqli_query($link, "SELECT id, name FROM tournaments" . ((!isAdmin()) ? " WHERE state = 'running' OR state = 'closed'" : ""));
             while ($data = mysqli_fetch_assoc($query))
                 $tournaments[$data['id']] = $data['name'];
         }
