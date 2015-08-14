@@ -1752,6 +1752,9 @@
     
     function createAttachment($gameId, $originalName, $description, $attachment)
     {
+        if (!isAdmin())
+        {
+        }
         $link = getDBConnection();
         $data = array();
         if (mysqli_select_db($link, getDBName()))
@@ -1787,6 +1790,10 @@
     
     function updateAttachment($attachmentId, $gameId, $originalName, $description, $attachment)
     {
+        if (!isAdmin())
+        {
+            return 4;
+        }
         $link = getDBConnection();
         $data = array();
         if (mysqli_select_db($link, getDBName()))
@@ -1814,6 +1821,10 @@
     
     function deleteAttachment($attachmentId)
     {
+        if (!isAdmin())
+        {
+            return 4;
+        }
         $link = getDBConnection();
         $data = array();
         if (mysqli_select_db($link, getDBName()))

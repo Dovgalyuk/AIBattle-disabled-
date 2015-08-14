@@ -1,5 +1,12 @@
 <?php
 	include_once('procedures.php');
+
+    if (!isAdmin())
+    {
+        echo "Нет полномочий";
+        exit;
+    }
+	
 	
 	$echoAnswer = "";
 	
