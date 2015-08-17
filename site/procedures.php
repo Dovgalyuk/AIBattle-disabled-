@@ -83,6 +83,8 @@
             return "Превышен лимит по памяти у второго игрока";
         if ($status == "TIE")
             return "Ничья";
+        if ($status == "IL")
+            return "Некоррентный лог";
         if (substr($status, 0, 2) == "IE")
             return "Внутренняя ошибка";
         return $status;
