@@ -1,7 +1,13 @@
 <?php
 	include_once('procedures.php');
 	
-	$echoAnswer = "";
+$echoAnswer = "";
+
+    if (!isAdmin())
+    {
+        echo "Нет полномочий";
+        exit;
+    }
 	
 	if (isset($_POST['createRound']))
 	{

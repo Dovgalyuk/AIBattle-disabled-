@@ -3,6 +3,12 @@
 	$checkerId = intval($_POST['checkerId']);
 
 	$echoAnswer = "";
+
+    if (!isAdmin())
+    {
+        echo "Нет полномочий";
+        exit;
+    }
 	
 	if (isset($_POST['createChecker']))
 	{

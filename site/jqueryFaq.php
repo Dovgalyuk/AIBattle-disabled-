@@ -3,6 +3,12 @@
 	
 	$echoAnswer = "";
 	$questionId = intval($_POST['questionId']);
+
+    if (!isAdmin())
+    {
+        echo "Нет полномочий";
+        exit;
+    }
 	
 	if (isset($_POST['createQuestion']))
 	{

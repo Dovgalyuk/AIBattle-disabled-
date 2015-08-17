@@ -878,6 +878,10 @@
     // создать игру
     function createGame($name, $description, $visualizer, $timeLimit, $memoryLimit)
     {
+        if (!isAdmin())
+        {
+            return 4;
+        }
         $link = getDBConnection();
         if (mysqli_select_db($link, getDBName()))
         {
@@ -918,6 +922,10 @@
     // обновить игру
     function updateGame($id, $name, $description, $visualizer, $timeLimit, $memoryLimit)
     {
+        if (!isAdmin())
+        {
+            return 4;
+        }
         $link = getDBConnection();
         if (mysqli_select_db($link, getDBName()))
         {
@@ -947,6 +955,10 @@
     // удалить игру
     function deleteGame($gameId)
     {
+        if (!isAdmin())
+        {
+            return 4;
+        }
         $link = getDBConnection();
         if (mysqli_select_db($link, getDBName()))
         {
@@ -1164,6 +1176,10 @@
     // Создать раунд
     function createRound($tournamentId, $roundName, $checker, $previousRound, $seed)
     {
+        if (!isAdmin())
+        {
+            return 4;
+        }
         $link = getDBConnection();
         if (mysqli_select_db($link, getDBName()))
         {
@@ -1184,6 +1200,10 @@
     // Обновить раунд
     function updateRound($tournamentId, $roundId, $roundName, $checker, $previousRound, $seed)
     {
+        if (!isAdmin())
+        {
+            return 4;
+        }
         $link = getDBConnection();
         if (mysqli_select_db($link, getDBName()))
         {
@@ -1426,6 +1446,10 @@
     // создать новость
     function createNews($header, $text, $date)
     {
+        if (!isAdmin())
+        {
+            return 4;
+        }
         $link = getDBConnection();
         if (mysqli_select_db($link, getDBName()))
         {
@@ -1443,6 +1467,10 @@
     // обновить новость
     function updateNews($newsId, $header, $text, $date)
     {
+        if (!isAdmin())
+        {
+            return 4;
+        }
         $link = getDBConnection();
         if (mysqli_select_db($link, getDBName()))
         {
@@ -1461,6 +1489,10 @@
     // удалить новость
     function deleteNews($newsId)
     {
+        if (!isAdmin())
+        {
+            return 4;
+        }
         $link = getDBConnection();
         if (mysqli_select_db($link, getDBName()))
         {
@@ -1678,6 +1710,10 @@
     // Отредактировать вопрос
     function updateAnswer($postQuestionId, $question, $answer)
     {
+        if (!isAdmin())
+        {
+            return 4;
+        }
         $link = getDBConnection();
         $data = array();
         if (mysqli_select_db($link, getDBName()))
@@ -1697,6 +1733,10 @@
     // Закрыть вопрос
     function closeAnswer($questionId)
     {
+        if (!isAdmin())
+        {
+            return 4;
+        }
         $link = getDBConnection();
         if (mysqli_select_db($link, getDBName()))
         {
@@ -1754,6 +1794,7 @@
     {
         if (!isAdmin())
         {
+            return 4;
         }
         $link = getDBConnection();
         $data = array();

@@ -2,6 +2,12 @@
 	include_once('procedures.php');
 	
 	$echoAnswer = "";
+
+    if (!isAdmin())
+    {
+        echo "Нет полномочий";
+        exit;
+    }
 	
 	$newsId = intval($_POST['newsId']);
 	$date = reverseDate($_POST['date'], "/");
