@@ -256,6 +256,8 @@ int main(int argc, char **argv)
         flags[i].c = initFlagC[i];
         field[flags[i].r][flags[i].c] = 'A' + i;
     }
+    customData[0] = "-1";
+    customData[1] = "-1";
 
     // save field and score before the first move
     saveField();
