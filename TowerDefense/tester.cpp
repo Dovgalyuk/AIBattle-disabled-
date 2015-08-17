@@ -308,7 +308,7 @@ ExecutionResult cannonBuilding(bool firstPlayer, istringstream &ins, std::string
         {
             // башню можно построить, так как место пустое
             int cost = cannonCost[cannonType];
-            if (players[playerIndex].gold - cost >= 0)
+            if (players[playerIndex].gold >= cost)
             {
                 // у игрока есть деньги на строительство
                 players[playerIndex].gold -= cost;
