@@ -399,7 +399,9 @@ ExecutionResult playerMove(bool firstPlayer, const char* program, std::string &r
             return ER_IM;
         }
     }
-    return ER_OK;
+
+    result = output;
+    return execResult;
 }
 
 bool checkCycleDR(int dx, int value)
@@ -616,10 +618,14 @@ int main(int argc, char **argv)
         ExecutionResult exec1 = playerMove(true, program1, output1);
 
         printLog(true, exec1, output1);
+        if (exec1 != ER_OK)
+            return 0;
 
         ExecutionResult exec2 = playerMove(false, program2, output2);
 
         printLog(false, exec2, output2);
+        if (exec2 != ER_OK)
+            return 0;
 
         // стрельба пушек
         
