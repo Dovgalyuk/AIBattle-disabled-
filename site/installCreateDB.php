@@ -72,7 +72,7 @@
 				`tournament` int NOT NULL,
 				`status` varchar(3) NOT NULL default 'OK',
 				`language` varchar(3) NOT NULL,
-                                'date' timestamp NOT NULL default CURRENT_TIMESTAMP,
+                `date` timestamp NOT NULL default CURRENT_TIMESTAMP,
 				INDEX user_ind(`user`),
 				INDEX game_ind(`game`),
 				FOREIGN KEY (`user`) REFERENCES users(`id`) ON DELETE CASCADE,
