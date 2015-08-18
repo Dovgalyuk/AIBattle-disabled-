@@ -1,5 +1,6 @@
 <?php
     $id = intval($_GET["id"]);
+    $action = $_GET["action"];
     if ($id == -1)
     {
         $gameId = intval($_GET["gameid"]);
@@ -17,10 +18,10 @@
         $state = $tour['state'];
         $checker = $tour['defaultChecker'];
     }
+    if ($action == "edit")
+    {
 ?>
 <script>
-    changeActiveAdminButton('tournamentsButton');
-    
     function submitForm()
     {
         var name = document.getElementById('name').value;
@@ -130,3 +131,50 @@
         </button>
     </div>    
 </form>
+<?php
+    }
+    else
+    {
+?>
+	<div class = "container content">
+        <h3>Раунды</h3>
+            <a href="?page=round&tournament=<?php echo $id;?>&id=-1" role=button class='btn btn-default'>Новый раунд</a>
+        <table class="table">
+        <thead>
+        <tr>
+        <td>ID</td>
+        <td>Название</td>
+        <td>Дата</td>
+        <td>Проведено дуэлей</td>
+        <td></td>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+            $rounds = getRoundList($id);
+            foreach ($rounds as $round)
+            {
+                if ($round['visible'])
+                    echo "<tr>";
+                else
+                    echo "<tr class=redColored>";
+                echo "<td>".$round['id']."</td>";
+                echo "<td><a href=?page=round&tournament=".$id."&id=".$round['id'].">".$round['name']."</a></td>";
+                echo "<td>".$round['date']."</td>";
+                echo "<td>".getCheckedDuels($round['id'])." / ". countDuelsInRound($round['id']) ."</td>";
+                if ($round['visible'])
+                    echo "<td></td>";
+                else
+                    echo "<td><a role=button class='btn btn-default'>Открыть</a></td>";
+                echo "</tr>";
+            }
+        ?>
+        </tbody>
+        </table>
+
+        <h3>Описание турнира</h3>
+        <?php echo $description;?>
+    </div>
+<?php
+    }
+?>

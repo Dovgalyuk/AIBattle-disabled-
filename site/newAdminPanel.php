@@ -18,10 +18,12 @@
         return "";
     }
 
-    function getAlternativePage($p)
+    function getTopPage($p)
     {
         if ($p == "checkers")
             return "games";
+        if ($p == "tournament" || $p == "round")
+            return "tournaments";
         return "";
     }
 
@@ -63,6 +65,15 @@
         else
             echo '<li><a href="'.$link.'">'.$name.'</a></li>';
     }
+    
+    function printTournamentTitle($id, $link)
+    {
+        $tour = getTournamentData($id);
+        printTitleItem(getRusTitle("games"), "?page=games");
+        printTitleItem(getGameName($tour['game']), "?page=game&id=".$tour['game']);
+        printTitleItem(getRusTitle("tournaments"), "?page=tournaments");
+        printTitleItem($tour['name'], $link ? "?page=tournament&id=".$id : "");
+    }
 
     function printPageTitle()
     {
@@ -76,11 +87,23 @@
             printTitleItem("Главная", "?page=");
             if ($page == "tournament")
             {
-                $tour = getTournamentData($_GET["id"]);
-                printTitleItem(getRusTitle("games"), "?page=games");
-                printTitleItem(getGameName($tour['game']), "?page=game&id=".$tour['game']);
-                printTitleItem(getRusTitle("tournaments"), "?page=tournaments");
-                printTitleItem($tour['name'], "");
+                $id = intval($_GET["id"]);
+                printTournamentTitle($id, false);
+                echo '<li><a href="?page=tournament&id='.$id.'&action=edit" role=button class="btn btn-default">Редактировать турнир</a></li>';
+           }
+            else if ($page == "round")
+            {
+                printTournamentTitle(intval($_GET["tournament"]), true);
+                $id = intval($_GET["id"]);
+                if ($id == -1)
+                {
+                    printTitleItem("Новый раунд", "");
+                }
+                else
+                {
+                    $round = getRoundData($id);
+                    printTitleItem($round['name'], "");
+                }
             }
             else if ($page == "games")
             {
@@ -151,7 +174,7 @@
     <?php
         foreach ($pages as $p)
         {
-            echo '<li class="' . ((($page == $p) || (getAlternativePage($page) == $p))?'active':'') . '"><a href="?page=' . $p . '">' . getRusTitle($p) . '</a></li>';
+            echo '<li class="' . ((($page == $p) || (getTopPage($page) == $p))?'active':'') . '"><a href="?page=' . $p . '">' . getRusTitle($p) . '</a></li>';
             //echo '<li><ul class="sidebar-brand"><li>тест<ul class="sidebar-brand"><li>тест</li></ul></li></ul></li>';
         }
     ?>
@@ -186,6 +209,10 @@
     else if ($page == "tournament")
     {
         include("admin/tournament.php");
+    } 
+    else if ($page == "round")
+    {
+        include("admin/round.php");
     } 
     else if ($page == "users") // Страница пользователей
     {
