@@ -101,12 +101,12 @@ struct Cannon
 {
     CannonType type;
     int health;
-
+    
     Cannon() : type(UNKNOWN), health(0) {}
     
     Cannon(CannonType cannonType)
     {
-        assert(type < UNKNOWN);
+        assert(cannonType < UNKNOWN);
         type = cannonType;
         health = cannonHealth[type];
     }
@@ -150,7 +150,7 @@ Player players[2]; // тут хранится информация о игроках
 // получить здоровье пушки по координате
 int getCannonHealth(int player, int x, int y)
 {
-    CannonMap playerCannons = cannons[player];
+    CannonMap &playerCannons = cannons[player];
     
     CannonMap::iterator it = playerCannons.find(Point(x, y));
     if (it != playerCannons.end())
@@ -289,7 +289,7 @@ ExecutionResult cannonBuilding(bool firstPlayer, istringstream &ins, std::string
     CannonType cannonType = UNKNOWN;
     int cx = -2, cy = -2, cannon = UNKNOWN;
 
-    ins >> cx >> cy >> cannon;
+    ins >> cx >> cy >> cannon;    
     cannonType = (CannonType)(cannon - 1);
 
     ostringstream outs;
@@ -301,7 +301,9 @@ ExecutionResult cannonBuilding(bool firstPlayer, istringstream &ins, std::string
     int y = players[playerIndex].position.y;
     int x = players[playerIndex].position.x;
     
-    if (Point::isCorrectPoint(cx, cy) && cannonPossibleToBuild(players[playerIndex].position, Point(cx, cy)))
+    if (Point::isCorrectPoint(cx, cy)
+        && cannonPossibleToBuild(players[playerIndex].position, Point(cx, cy))
+        && cannonType >= FIRST && cannonType <= THIRD)
     {
         // проверка на то, что пользователь ввел корректное значение
         if (field[cy][cx] == EMPTY)
