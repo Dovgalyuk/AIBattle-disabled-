@@ -366,7 +366,7 @@ ExecutionResult playerMove(bool firstPlayer, const char* program, std::string &r
     int player = firstPlayer == true ? 0 : 1;
     int enemy = 1 - player;
 
-    outs << player + 1 << " " << players[player].gold << " " << players[player].score  << "\n";
+    outs << player + 1 << " " << players[player].gold << " " << players[enemy].gold  << "\n";
     getField(outs);
 
     printInput(firstPlayer, outs.str());
