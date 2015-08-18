@@ -251,7 +251,7 @@ function setLog(logStrings)
 
 function changeData(firstPlayer, secondPlayer)
 {
-	document.getElementById('scoreDiv').innerHTML = "G: " + firstPlayer.gold + ", S: " + firstPlayer.score + " - G: " + secondPlayer.gold + ", S: " + secondPlayer.score; 
+	document.getElementById('scoreDiv').innerHTML = "Turn: "+ (it + 1) + ", G: " + firstPlayer.gold + ", S: " + firstPlayer.score + " - G: " + secondPlayer.gold + ", S: " + secondPlayer.score; 
 }
 
 function play_start()
