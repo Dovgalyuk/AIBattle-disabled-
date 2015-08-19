@@ -136,6 +136,25 @@
     else
     {
 ?>
+<script>
+    function openRound(round)
+    {
+        var data =	{
+                'openRound' : true,
+                'roundId' : round
+            };        
+        $.post
+        (
+            "jqueryRound.php", 
+            data,
+            function (data)
+            {
+                showModalAlert(data);
+                window.location.reload();
+            }
+        )
+    }
+</script>
 	<div class = "container content">
         <h3>Раунды</h3>
             <a href="?page=round&tournament=<?php echo $id;?>&id=-1" role=button class='btn btn-default'>Новый раунд</a>
@@ -165,7 +184,15 @@
                 if ($round['visible'])
                     echo "<td></td>";
                 else
-                    echo "<td><a role=button class='btn btn-default'>Открыть</a></td>";
+                {
+                    echo "<td>";
+                    echo '<button type = "submit" name = "submit" '
+                         .' onclick = "openRound('.$round['id'].'); return false;" '
+                         .' class = "btn btn-default">';
+                    echo "Открыть</button>";
+                    //echo "<td><a role=button class='btn btn-default' onclick='openRound(".$round['id'].");'>Открыть</a></td>";
+                    echo "</td>";
+                }
                 echo "</tr>";
             }
         ?>

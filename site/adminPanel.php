@@ -25,7 +25,6 @@
 				<div class="btn-group">
 					<button type="button" id="gameButton" class="btn btn-info" onclick="$('#dataContainer').load('APgame.php');">Игры</button>
 					<button type="button" id="tournamentButton" class="btn btn-default" onclick="$('#dataContainer').load('APtournament.php');">Турниры</button>
-					<button type="button" id="roundsButton"  class="btn btn-default" onclick="$('#dataContainer').load('AProunds.php');">Раунды</button>
 					<button type="button" id="checkersButton" class="btn btn-default" onclick="$('#dataContainer').load('APcheckers.php');">Тестировщики игр</button>
 					<button type="button" id="attachmentsButton" class="btn btn-default" onclick="$('#dataContainer').load('APattachments.php');">Файлы игр</button>
 					<button type="button" id="usersButton" class="btn btn-default" onclick="$('#dataContainer').load('APuserManagement.php');">Пользователи</button>

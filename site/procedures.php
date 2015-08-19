@@ -1090,72 +1090,7 @@
         }
         return $data;
     }
-    
-    // Создать раунд
-    function createRound($tournamentId, $roundName, $checker, $previousRound, $seed)
-    {
-        if (!isAdmin())
-        {
-            return 4;
-        }
-        $link = getDBConnection();
-        if (mysqli_select_db($link, getDBName()))
-        {
-            $tournament = getTournamentList($tournamentId);
-            $gameId = $tournament['game'];
-            $roundName = mysqli_real_escape_string($link, $roundName);
-            $checker = mysqli_real_escape_string($link, $checker);
-            $previousRound  = mysqli_real_escape_string($link, $previousRound);
-            
-            if (mysqli_query($link, "INSERT INTO rounds SET tournament = $tournamentId, name = '$roundName', game = $gameId, checker = $checker, previousRound = $previousRound, seed = $seed"))
-                return 0;
-            else
-                return 1;
-        }
-        else return 2;
-    }
-    
-    // Обновить раунд
-    function updateRound($tournamentId, $roundId, $roundName, $checker, $previousRound, $seed)
-    {
-        if (!isAdmin())
-        {
-            return 4;
-        }
-        $link = getDBConnection();
-        if (mysqli_select_db($link, getDBName()))
-        {
-            $tournament = getTournamentList($tournamentId);
-            $gameId = $tournament['game'];
-            
-            $roundName = mysqli_real_escape_string($link, $roundName);
-            $checker = intval($checker);
-            $previousRound = intval($previousRound);
-            
-            if (mysqli_query($link, "UPDATE rounds SET tournament = $tournamentId, name = '$roundName', game = $gameId, checker = $checker, previousRound = $previousRound, seed = $seed WHERE id = $roundId"))
-                return 0;
-            else
-                return 1;
-        }
-        else return 2;
-    }
-    
-    // Получить предыдущий раунд
-    function getPreviousRound($roundId)
-    {
-        $link = getDBConnection();
-        $previousRound = -1;
-        if (mysqli_select_db($link, getDBName()))
-        {
-            $roundId = intval($roundId);
-            $query = mysqli_query($link, "SELECT previousRound FROM rounds WHERE id = $roundId");
-            $data = mysqli_fetch_assoc($query);
-            $previousRound = $data['previousRound'];
-            mysqli_free_result($query);
-        }
-        return $previousRound;
-    }
-    
+        
     // Обновить допущенных к раунду игроков
     function updateActiveUsers($tournament, $roundId, $activeStrategies)
     {

@@ -8,6 +8,59 @@
 		$rounds = getRoundList($tournamentId);
 ?>
 <script>
+        function submitForm()
+        {
+            var checkers = document.getElementById('checker');
+			var checker = checkers.options[checkers.selectedIndex].value;
+			var roundName = document.getElementById('name').value;
+			//var previousRound = document.getElementById('previousRoundSelector').value;
+			//var strategyData = getAcceptedUsersStrategy();
+            var strategyData = [];
+            var accepted = document.getElementById('acceptedUsers').options;
+            for (var i = 0; i < accepted.length; ++i) 
+            {
+                strategyData.push(accepted[i].value);
+            }
+			var seed = document.getElementById('seed').value;
+
+			if (roundName == '')
+            {
+                showModalAlert('Название раунда не может быть пустым.')
+                return;
+            }
+			if (checker == -1)
+            {
+                showModalAlert('Нужно выбрать тестировщик.')
+                return;
+            }
+            if (strategyData.length < 2)
+            {
+                showModalAlert('В раунде должно участвовать не меньше 2 стратегий.')
+                return;
+            }
+            
+            var data = {
+                    'tournamentId' : <?php echo $tournamentId; ?>,
+                    'checker' : checker,
+                    'roundName' : roundName,
+                    'strategies' : strategyData,
+                    'previousRound' : -1,
+                    'seed' : seed,
+                    'createAndStart' : true
+                };
+            
+            $.post
+            (
+                "jqueryRound.php", 
+                data,
+                function (data)
+                {
+                    console.log(data);
+                }
+            );
+            window.location = "?page=tournament&id=<?php echo $tournamentId; ?>";
+        }
+
 		function loadRoundUsers()
 		{
 			$.post(
