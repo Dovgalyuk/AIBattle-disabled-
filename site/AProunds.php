@@ -507,7 +507,7 @@
 			</script>
 			<br>
 			<?php
-				$roundDuel = intval(checkRoundInDuels($roundId));
+				$roundDuel = intval(countDuelsInRound($roundId));
 				$roundVisible = intval(isRoundVisible($roundId));
 				$checkedDuels = intval(getCheckedDuels($roundId));
 				if ($roundDuel == 0)

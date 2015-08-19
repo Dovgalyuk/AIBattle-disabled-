@@ -239,7 +239,7 @@ function setLog(logStrings)
 	}
 }
 
-function start()
+function play_start()
 {
 	clearInterval(timer);
 	it = 0;
@@ -259,6 +259,19 @@ function start()
 		}
 	}, 1000);
 }
+
+function play_stop()
+{
+    clearInterval(timer);
+}
+
+function play_reset()
+{
+    clearInterval(timer);
+    it = 0;
+    draw();
+}
+
 
 function stepPrev()
 {
