@@ -198,4 +198,23 @@
         }
         return $data;
     }
+    
+    function getTournamentStrategies($tournamentId)
+    {
+        $tournamentId = intval($tournamentId);
+        $link = getDBConnection();
+        $data = array();
+        if (mysqli_select_db($link, getDBName()))
+        {
+            $query = mysqli_query($link, 
+                "SELECT str.id AS strategy, usr.login AS login FROM strategies AS str "
+                . " INNER JOIN users AS usr ON usr.id = str.user "
+                . "WHERE str.tournament = $tournamentId AND str.status = 'ACT'");
+            while ($row = mysqli_fetch_assoc($query))
+                $data[] = $row;
+            mysqli_free_result($query);
+        }
+        return $data;
+    }
+
 ?>

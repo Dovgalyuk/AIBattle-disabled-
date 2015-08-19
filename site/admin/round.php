@@ -20,32 +20,15 @@
 				{
 					var data = JSON.parse(responceText);
 					
-					var acceptedUsers = data.acceptedUsers;
-					var possibleUsers = data.possibleUsers;
+					var strategies = data.strategies;
 					
 					var acceptedList = document.getElementById('acceptedUsers');
 					var possibleList = document.getElementById('possibleUsers');
 					
-					for (var i = 0; i < acceptedUsers.length; ++i)
+					for (var i = 0; i < strategies.length; ++i)
 					{
-						var currentUser = acceptedUsers[i];
-						var text = currentUser.login;
-						if ("score" in currentUser)
-						{
-							text = text + ' (' + currentUser.score + ')';
-						}
-						acceptedList.options[i] = new Option(text, currentUser.id);	
-					}
-					
-					for (var i = 0; i < possibleUsers.length; ++i)
-					{
-						var currentUser = possibleUsers[i];
-						var text = currentUser.login;
-						if ("score" in currentUser)
-						{
-							text = text + ' (' + currentUser.score + ')';
-						}
-						possibleList.options[i] = new Option(text, currentUser.id);
+						var current = strategies[i];
+						possibleList.options[i] = new Option(current.login, current.strategy);
 					}
 				}
 			);
@@ -53,35 +36,48 @@
 
 		function clearAcceptedUsers(roundId)
 		{
-			/*var checker = document.getElementById('clearAcceptedUsersButton');
-			var seed = document.getElementById('checkerSeed').value;
-			changeRoundActivity(roundId, 'clearAcceptedUsers', [], -1, -1, seed);*/
+			var possibleUsers = document.getElementById('possibleUsers');
+			var acceptedUsers = document.getElementById('acceptedUsers');
+            while (acceptedUsers.length > 0)
+            {
+                var user = acceptedUsers.options[0];
+                acceptedUsers.remove(0);
+                possibleUsers.add(user);
+            }
 		}
 		
 		function acceptAllUsers()
 		{
-			/*var checker = document.getElementById('acceptPossibleUsersButton'); 
-			var possibleUsers = getPossibleUsersStrategy();
-			var seed = document.getElementById('checkerSeed').value;
-			changeRoundActivity(roundId, 'acceptPossibleUsers', possibleUsers, -1, -1, seed);*/
+			var possibleUsers = document.getElementById('possibleUsers');
+			var acceptedUsers = document.getElementById('acceptedUsers');
+            while (possibleUsers.length > 0)
+            {
+                var user = possibleUsers.options[0];
+                possibleUsers.remove(0);
+                acceptedUsers.add(user);
+            }
 		}
 
-		function acceptNewUser()
+		function acceptUser()
 		{
 			var possibleUsers = document.getElementById('possibleUsers');
+			var acceptedUsers = document.getElementById('acceptedUsers');
 			if (possibleUsers)
 			{
 				var index = possibleUsers.selectedIndex;
 				if (index != -1)
 				{
 					var strategyId = possibleUsers[index].value;
-					//changeRoundActivity(roundId, 'acceptPossibleUsers', [strategyId], -1, -1, seed);
+                    var login = possibleUsers[index].label;
+                    acceptedUsers.add(new Option(login, strategyId));
+					possibleUsers.remove(index);
 				}
 			}
 		}
 		
 		function declineUser()
 		{
+			var possibleUsers = document.getElementById('possibleUsers');
 			var acceptedUsers = document.getElementById('acceptedUsers');
 			if (acceptedUsers)
 			{
@@ -89,7 +85,9 @@
 				if (index != -1)
 				{
 					var strategyId = acceptedUsers[index].value;
-					//changeRoundActivity(roundId, 'declineUsers', [strategyId], -1, -1, seed);
+                    var login = acceptedUsers[index].label;
+                    possibleUsers.add(new Option(login, strategyId));
+					acceptedUsers.remove(index);
 				}
 			}
 		}
@@ -150,7 +148,7 @@
 					<tr>
 						<td class = "PossibleListWidth">
 							<select id = "possibleUsers"
-                                onclick="acceptNewUser();"
+                                onclick="acceptUser();"
                                 multiple class="form-control">
 							</select>
 						</td>
