@@ -85,11 +85,19 @@
 <?php
             }
 ?>
-            value="<?php echo getActiveUserID(); ?>">
+            value="<?php echo $user; ?>">
             <?php echo getNicknameById($user); ?>
         </option>
 <?php
         $users = getUsersWithStrategies($tournamentId);
+        $flag = true;
+        foreach ($users as $field)
+            if ($field['id'] == getActiveUserID())
+                $flag = false;
+        if ($flag)
+        {
+            array_unshift($users, Array("id" => getActiveUserID(), "login" => getActiveUserNickname()));
+        }
         foreach ($users as $field)
         {
             if ($field['id'] != $user)
