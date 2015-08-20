@@ -584,7 +584,7 @@ int main(int argc, char **argv)
 {
     if (argc != 3 && argc != 4)
     {
-        std::cout << "Usage: TW_tester <program1> <program2> [<seed>]\n";
+        std::cout << "Usage: TowerTester <program1> <program2> [<seed>]\n";
         return 1;
     }
 

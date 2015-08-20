@@ -1,4 +1,3 @@
-
 #include <ctime>
 #include <cstdlib>
 #include <iostream>
@@ -15,7 +14,7 @@ const int move_dy[] = {0, -1, 1, 0};
 
 bool good(int x, int y) 
 {
-    return (x >= 0 && x < fieldSize && y >= 0 && y < fieldSize);
+    return x >= 0 && x < fieldSize && y >= 0 && y < fieldSize;
 }
 
 char getMove(int x, int y)
@@ -33,30 +32,38 @@ char getMove(int x, int y)
 int main()
 {
     srand((unsigned)time(NULL));
-    int money = 0, score = 0, x = -1, y = -1, player;
+    int money = 0, money2 = 0, x = -1, y = -1, player;
 
-    cin >> player >> money >> score;
+    cin >> player >> money >> money2;
 
     for (int i = 0; i < fieldSize; ++i)
+    {
         for (int j = 0; j < fieldSize; ++j)
         {
             cin >> field[i][j];
 
-            if ((player == 1 && field[i][j] == 500) || (player == 2 && field[i][j] == 900)) {
+            if ((player == 1 && field[i][j] == 500)
+                || (player == 2 && field[i][j] == 900))
+            {
                 y = i;
                 x = j;
             }
         }
+    }
 
-    vector<pair<int, int>> possibleBuilding;
+    vector<pair<int, int> > possibleBuilding;
 
-    // если есть возможность построить башню - пытаемся строить
+    // если есть возможность построить пушку - пытаемся строить
     if (money >= 7)
     {
         for (int i = 0; i < 8; ++i)
-            if (good(x + build_dx[i], y + build_dy[i]) && field[y + build_dy[i]][x + build_dx[i]] == 0)
+        {
+            if (good(x + build_dx[i], y + build_dy[i])
+                && field[y + build_dy[i]][x + build_dx[i]] == 0)
+            {
                 possibleBuilding.push_back(make_pair(x + build_dx[i], y + build_dy[i]));
-    
+            }
+        }
     }
 
     if (!possibleBuilding.empty())
@@ -67,23 +74,30 @@ int main()
     else
     {
         // строить нечего - пытаемся поймать монетки
-        vector<pair<int, int>> possibleMovement;
+        vector<pair<int, int> > possibleMovement;
 
         for (int i = 0; i < 4; ++i)
-            if (good(x + move_dx[i], y + move_dy[i]) && 
-                (field[y + move_dy[i]][x + move_dx[i]] == 0 || field[y + move_dy[i]][x + move_dx[i]] == 1000))
-                    possibleMovement.push_back(make_pair(move_dx[i], move_dy[i]));
+        {
+            if (good(x + move_dx[i], y + move_dy[i])
+                && (field[y + move_dy[i]][x + move_dx[i]] == 0
+                    || field[y + move_dy[i]][x + move_dx[i]] == 1000))
+            {
+                possibleMovement.push_back(make_pair(move_dx[i], move_dy[i]));
+            }
+        }
 
         if (possibleMovement.size() > 0)
         {
             // Есть куда идти
             for (int i = 0; i < possibleMovement.size(); ++i)
+            {
                 if (field[y + possibleMovement[i].second][x + possibleMovement[i].first] == 1000)
                 {
                     // сперва собираем монетки
                     cout << "M " << getMove(possibleMovement[i].first, possibleMovement[i].second) << endl;
                     return 0;
                 }
+            }
 
             // монеток нет - идем куда сможем
             int index = rand() % possibleMovement.size();
