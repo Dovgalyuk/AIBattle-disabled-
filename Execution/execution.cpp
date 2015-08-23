@@ -1,6 +1,14 @@
 #include <windows.h>
+#include <Psapi.h>
 #include <iostream>
 #include "execution.h"
+
+#pragma comment(lib, "Psapi.lib")
+
+long long FiletimeToLonglong(const FILETIME *ft)
+{
+    return ft->dwLowDateTime + ((long long)ft->dwHighDateTime << 32);
+}
 
 static void shutdownProcess(const PROCESS_INFORMATION &pi, HANDLE hChildStdinRd, HANDLE hChildStdinWr, HANDLE hChildStdoutRd, HANDLE hChildStdoutWr)
 {
@@ -83,59 +91,100 @@ ExecutionResult runProcess(const std::string &exe, const std::string &input,
         DEBUG_EVENT de;
         int processes = 0;
         ExecutionResult res = ER_NONE;
-        while (res == ER_NONE && WaitForDebugEvent(&de, timeLimit))
+        while (res == ER_NONE)
         {
-            switch (de.dwDebugEventCode)
+            if (WaitForDebugEvent(&de, timeLimit))
             {
-            case EXCEPTION_DEBUG_EVENT:
-                // TODO: pass exceptions to application?
-                if (!de.u.Exception.dwFirstChance)
-                    res = ER_RE;
-                break;
-            case CREATE_THREAD_DEBUG_EVENT:
-                // TODO: set affinity mask to use only one core/cpu
-                CloseHandle(de.u.CreateThread.hThread);
-                //res = ER_SV;
-                break;
-            case CREATE_PROCESS_DEBUG_EVENT:
-                CloseHandle(de.u.CreateProcessInfo.hFile);
-                ++processes;
-                if (processes > 1)
-                    res = ER_SV;
-                break;
-            case EXIT_THREAD_DEBUG_EVENT:
-                break;
-            case EXIT_PROCESS_DEBUG_EVENT:
-                --processes;
-                if (processes == 0)
-                    res = ER_OK;
-                break;
-            case LOAD_DLL_DEBUG_EVENT:
-                // TODO: filter dlls at compile or execution time
-                CloseHandle(de.u.LoadDll.hFile);
-                break;
-            case UNLOAD_DLL_DEBUG_EVENT:
-                break;
-            case OUTPUT_DEBUG_STRING_EVENT:
-                break;
-            case RIP_EVENT:
-                res = ER_IE;
-                break;
+                switch (de.dwDebugEventCode)
+                {
+                case EXCEPTION_DEBUG_EVENT:
+                    // TODO: pass exceptions to application?
+                    if (!de.u.Exception.dwFirstChance)
+                        res = ER_RE;
+                    break;
+                case CREATE_THREAD_DEBUG_EVENT:
+                    // TODO: set affinity mask to use only one core/cpu
+                    CloseHandle(de.u.CreateThread.hThread);
+                    //res = ER_SV;
+                    break;
+                case CREATE_PROCESS_DEBUG_EVENT:
+                    CloseHandle(de.u.CreateProcessInfo.hFile);
+                    ++processes;
+                    if (processes > 1)
+                        res = ER_SV;
+                    break;
+                case EXIT_THREAD_DEBUG_EVENT:
+                    break;
+                case EXIT_PROCESS_DEBUG_EVENT:
+                    --processes;
+                    if (processes == 0)
+                        res = ER_OK;
+                    break;
+                case LOAD_DLL_DEBUG_EVENT:
+                    // TODO: filter dlls at compile or execution time
+                    CloseHandle(de.u.LoadDll.hFile);
+                    break;
+                case UNLOAD_DLL_DEBUG_EVENT:
+                    break;
+                case OUTPUT_DEBUG_STRING_EVENT:
+                    break;
+                case RIP_EVENT:
+                    res = ER_IE;
+                    break;
+                }
+                if (res == ER_NONE)
+                    ContinueDebugEvent(de.dwProcessId, de.dwThreadId, DBG_EXCEPTION_NOT_HANDLED);
             }
-            if (res == ER_NONE)
-                ContinueDebugEvent(de.dwProcessId, de.dwThreadId, DBG_EXCEPTION_NOT_HANDLED);
 
-            // TODO: measure timings and memory limits
+            // measure timings and memory limits
+            FILETIME create, exit, kernel, user;
+            if (GetProcessTimes(pi.hProcess, &create, &exit, &kernel, &user))
+            {
+                // CPU time
+                long long time = FiletimeToLonglong(&kernel) + FiletimeToLonglong(&user);
+                if (time / 10000 > timeLimit)
+                    res = ER_TL;
+                // total time
+                SYSTEMTIME st;
+                GetSystemTime(&st);
+                if (SystemTimeToFileTime(&st, &exit))
+                {
+                    time = FiletimeToLonglong(&exit) - FiletimeToLonglong(&create);
+                    if (time / 10000 > timeLimit)
+                        res = ER_TL;
+                }
+                else
+                {
+                    res = ER_IE;
+                }
+            }
+            else
+            {
+                res = ER_IE;
+            }
+            PROCESS_MEMORY_COUNTERS mem;
+            if (GetProcessMemoryInfo(pi.hProcess, &mem, sizeof(mem)))
+            {
+                if (mem.PeakWorkingSetSize > (size_t)memoryLimit * 1024)
+                    res = ER_ML;
+            }
+            else
+            {
+                res = ER_IE;
+            }
         }
         switch (res)
         {
-        case ER_NONE:
         case ER_TL:
-            // timeout
             output = "timeout";
             TerminateProcess(pi.hProcess, 0);
             shutdownProcess(pi, hChildStdinRd, hChildStdinWr, hChildStdoutRd, hChildStdoutWr);
             return ER_TL;
+        case ER_ML:
+            output = "memory limit";
+            TerminateProcess(pi.hProcess, 0);
+            shutdownProcess(pi, hChildStdinRd, hChildStdinWr, hChildStdoutRd, hChildStdoutWr);
+            return ER_ML;
         case ER_RE:
             output = "exception has occured";
             TerminateProcess(pi.hProcess, 0);
