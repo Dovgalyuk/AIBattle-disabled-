@@ -41,6 +41,20 @@ int main()
     // time limit
     Sleep(1000);
 #endif
+#if 0
+    // time limit 2
+    for (int i = 0 ; i < 100000000 ; ++i)
+        srand((unsigned int)time(0));
+#endif
+#if 0
+    // memory limit
+    char *c = new char[64000000];
+#endif
+#if 0
+    // memory limit in static requires initialization
+    static char c[256000000];
+    memset(c, -1, sizeof(c));
+#endif
 
     srand((unsigned int)time(0));
 
