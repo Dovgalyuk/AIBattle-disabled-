@@ -1,5 +1,5 @@
 IF(WIN32)
-    add_library(execution execution.cpp)
+    add_library(execution execution.cpp testlib.cpp)
 ELSE()
-    add_library(execution execution_linux.cpp)
+    add_library(execution execution_linux.cpp testlib.cpp)
 ENDIF()
