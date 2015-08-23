@@ -54,7 +54,8 @@ ExecutionResult runProcess(const std::string &exe, const std::string &input,
     si.hStdOutput = hChildStdoutWr;
     si.hStdInput = hChildStdinRd;
 
-    if (!CreateProcess(exe.c_str(), NULL, NULL, NULL, true, CREATE_NO_WINDOW, NULL, NULL, &si, &pi))
+    if (!CreateProcess(exe.c_str(), NULL, NULL, NULL, true,
+        CREATE_NO_WINDOW | DEBUG_PROCESS, NULL, NULL, &si, &pi))
     {
         //std::cout << exe << std::endl; Для теста!
         output = "CreateProcess failed!";
@@ -79,60 +80,119 @@ ExecutionResult runProcess(const std::string &exe, const std::string &input,
             return ER_IE;
         }
 
-        DWORD processStatus = WaitForSingleObject(pi.hProcess, timeLimit);
-        if (processStatus == WAIT_TIMEOUT)
+        DEBUG_EVENT de;
+        int processes = 0;
+        ExecutionResult res = ER_NONE;
+        while (res == ER_NONE && WaitForDebugEvent(&de, timeLimit))
         {
-            // время вышло, сообщаем об этом
-            output = "processStatus: TIMEOUT!";
+            switch (de.dwDebugEventCode)
+            {
+            case EXCEPTION_DEBUG_EVENT:
+                // TODO: pass exceptions to application?
+                if (!de.u.Exception.dwFirstChance)
+                    res = ER_RE;
+                break;
+            case CREATE_THREAD_DEBUG_EVENT:
+                // TODO: set affinity mask to use only one core/cpu
+                CloseHandle(de.u.CreateThread.hThread);
+                //res = ER_SV;
+                break;
+            case CREATE_PROCESS_DEBUG_EVENT:
+                CloseHandle(de.u.CreateProcessInfo.hFile);
+                ++processes;
+                if (processes > 1)
+                    res = ER_SV;
+                break;
+            case EXIT_THREAD_DEBUG_EVENT:
+                break;
+            case EXIT_PROCESS_DEBUG_EVENT:
+                --processes;
+                if (processes == 0)
+                    res = ER_OK;
+                break;
+            case LOAD_DLL_DEBUG_EVENT:
+                // TODO: filter dlls at compile or execution time
+                CloseHandle(de.u.LoadDll.hFile);
+                break;
+            case UNLOAD_DLL_DEBUG_EVENT:
+                break;
+            case OUTPUT_DEBUG_STRING_EVENT:
+                break;
+            case RIP_EVENT:
+                res = ER_IE;
+                break;
+            }
+            if (res == ER_NONE)
+                ContinueDebugEvent(de.dwProcessId, de.dwThreadId, DBG_EXCEPTION_NOT_HANDLED);
+
+            // TODO: measure timings and memory limits
+        }
+        switch (res)
+        {
+        case ER_NONE:
+        case ER_TL:
+            // timeout
+            output = "timeout";
             TerminateProcess(pi.hProcess, 0);
             shutdownProcess(pi, hChildStdinRd, hChildStdinWr, hChildStdoutRd, hChildStdoutWr);
             return ER_TL;
-        }
-        else if (processStatus == WAIT_FAILED)
-        {
-            // произошла непонятная ошибка
-            output = "WaitForSingleObject failed!";
+        case ER_RE:
+            output = "exception has occured";
+            TerminateProcess(pi.hProcess, 0);
+            shutdownProcess(pi, hChildStdinRd, hChildStdinWr, hChildStdoutRd, hChildStdoutWr);
+            return ER_RE;
+        case ER_IE:
+            output = "debugging internal error";
             TerminateProcess(pi.hProcess, 0);
             shutdownProcess(pi, hChildStdinRd, hChildStdinWr, hChildStdoutRd, hChildStdoutWr);
             return ER_IE;
-        }
-        else if (processStatus == WAIT_OBJECT_0)
-        {
-            DWORD exitCode = 0;
-            if (!GetExitCodeProcess(pi.hProcess, &exitCode))
-            {
-                output = "Cannot get process exit code.";
-                shutdownProcess(pi, hChildStdinRd, hChildStdinWr, hChildStdoutRd, hChildStdoutWr);
-                return ER_IE;
-            }
-            if (exitCode != 0)
-            {
-                output = "Program terminated with non-zero exit code";
-                shutdownProcess(pi, hChildStdinRd, hChildStdinWr, hChildStdoutRd, hChildStdoutWr);
-                return ER_RE;
-            }
-            // программа работает корректно
-            for (;;)
-            {
-                char buffer[128];
-                DWORD read;
-                BOOL readSuccess = ReadFile(hChildStdoutRd, buffer, sizeof(buffer) - 1, &read, NULL);
-
-                if (!readSuccess || read == 0)
-                    break;
-                buffer[read] = 0;
-                output += buffer;
-            }
+        case ER_SV:
+            output = "creating new processes";
+            TerminateProcess(pi.hProcess, 0);
             shutdownProcess(pi, hChildStdinRd, hChildStdinWr, hChildStdoutRd, hChildStdoutWr);
-            if (output.find("END_OF_OUTPUT") != std::string::npos
-                || output.find("END_OF_INPUT") != std::string::npos
-                || output.find("END_OF_ANIMATION") != std::string::npos
-                || output.find("END_OF_FIELD") != std::string::npos)
+            return ER_SV;
+        case ER_OK:
             {
-                return ER_SV;
+                DWORD exitCode = 0;
+                if (!GetExitCodeProcess(pi.hProcess, &exitCode))
+                {
+                    output = "Cannot get process exit code.";
+                    shutdownProcess(pi, hChildStdinRd, hChildStdinWr, hChildStdoutRd, hChildStdoutWr);
+                    return ER_IE;
+                }
+                if (exitCode != 0)
+                {
+                    output = "Program terminated with non-zero exit code";
+                    shutdownProcess(pi, hChildStdinRd, hChildStdinWr, hChildStdoutRd, hChildStdoutWr);
+                    return ER_RE;
+                }
+                // программа работает корректно
+                for (;;)
+                {
+                    DWORD read;
+                    BOOL success = PeekNamedPipe(hChildStdoutRd, NULL, 0, NULL, &read, NULL);
+                    if (!success || read == 0)
+                        break;
+                        
+                    char buffer[128];
+                    success = ReadFile(hChildStdoutRd, buffer, sizeof(buffer) - 1, &read, NULL);
+
+                    if (!success || read == 0)
+                        break;
+                    buffer[read] = 0;
+                    output += buffer;
+                }
+                shutdownProcess(pi, hChildStdinRd, hChildStdinWr, hChildStdoutRd, hChildStdoutWr);
+                if (output.find("END_OF_OUTPUT") != std::string::npos
+                    || output.find("END_OF_INPUT") != std::string::npos
+                    || output.find("END_OF_ANIMATION") != std::string::npos
+                    || output.find("END_OF_FIELD") != std::string::npos)
+                {
+                    return ER_SV;
+                }
+                return ER_OK;
             }
-            // посылаем что всё окей
-            return ER_OK;
+            break;
         }
     }
 
