@@ -55,6 +55,22 @@ int main()
     static char c[256000000];
     memset(c, -1, sizeof(c));
 #endif
+#if 0
+    // exception
+    throw 1;
+#endif
+#if 0
+    // division by zero
+    int x = 10;
+    for (int i = -10 ; i < 10 ; ++i)
+        x += x / i;
+#endif
+#if 0
+    // buffer overflow
+    int *x = new int[10];
+    for (int i = 0 ; i < 20 ; ++i)
+        x[i] = 5;
+#endif
 
     srand((unsigned int)time(0));
 
