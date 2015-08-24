@@ -1,6 +1,7 @@
 #include <sstream>
 #include <iostream>
 #include "execution.h"
+#include "testlib.h"
 
 const int size = 3;
 
@@ -88,32 +89,46 @@ int main(int argc, char **argv)
             outs.str(), output, 1000, 64000);
         if (result == ER_OK)
         {
-            std::istringstream ins(output);
-            int x, y;
-            ins >> y >> x;
-            if (x >= 1 && x <= size && y >= 1 && y <= size
-                && !field[y-1][x-1])
-            {
-                printLog(first, result, output);
 
-                int xo = first ? 1 : 2;
-                field[y-1][x-1] = xo;
-				
-				saveField();
-				
-				// check win
-                if (diag1(xo) || diag2(xo) || horz(xo, y - 1) || vert(xo, x - 1))
+            //std::istringstream ins(output);
+            InStream ins(output);
+            try
+            {
+                int x, y;
+                ins >> ValueInBounds<int>(y, 1, size) >> ValueInBounds<int>(x, 1, size);
+
+                if (!field[y-1][x-1])
                 {
-                    result = ER_WIN;
+                    printLog(first, result, output);
+
+                    int xo = first ? 1 : 2;
+                    field[y-1][x-1] = xo;
+
+                    saveField();
+
+                    // check win
+                    if (diag1(xo) || diag2(xo) || horz(xo, y - 1) || vert(xo, x - 1))
+                    {
+                        result = ER_WIN;
+                        printLog(first, result, output);
+                        break;
+                    }
+                }
+                else
+                {
+                    result = ER_IM;
                     printLog(first, result, output);
                     break;
                 }
+
             }
-            else
+            catch (ReadCheckerException &exception)
             {
                 result = ER_IM;
-                printLog(first, result, output);
-                break;
+                std::ostringstream out;
+                out << output << "\n" << exception.getReadResultText() << ": " << exception.what() << std::endl;
+                printLog(first, result, out.str());
+                return 0;
             }
         }
         else
