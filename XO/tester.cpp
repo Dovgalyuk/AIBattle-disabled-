@@ -89,38 +89,11 @@ int main(int argc, char **argv)
             outs.str(), output, 1000, 64000);
         if (result == ER_OK)
         {
-
-            //std::istringstream ins(output);
             InStream ins(output);
+            int x, y;
             try
             {
-                int x, y;
                 ins >> ValueInBounds<int>(y, 1, size) >> ValueInBounds<int>(x, 1, size);
-
-                if (!field[y-1][x-1])
-                {
-                    printLog(first, result, output);
-
-                    int xo = first ? 1 : 2;
-                    field[y-1][x-1] = xo;
-
-                    saveField();
-
-                    // check win
-                    if (diag1(xo) || diag2(xo) || horz(xo, y - 1) || vert(xo, x - 1))
-                    {
-                        result = ER_WIN;
-                        printLog(first, result, output);
-                        break;
-                    }
-                }
-                else
-                {
-                    result = ER_IM;
-                    printLog(first, result, output);
-                    break;
-                }
-
             }
             catch (ReadCheckerException &exception)
             {
@@ -129,6 +102,29 @@ int main(int argc, char **argv)
                 out << output << "\n" << exception.getReadResultText() << ": " << exception.what() << std::endl;
                 printLog(first, result, out.str());
                 return 0;
+            }
+            if (!field[y-1][x-1])
+            {
+                printLog(first, result, output);
+
+                int xo = first ? 1 : 2;
+                field[y-1][x-1] = xo;
+
+                saveField();
+
+                // check win
+                if (diag1(xo) || diag2(xo) || horz(xo, y - 1) || vert(xo, x - 1))
+                {
+                    result = ER_WIN;
+                    printLog(first, result, output);
+                    break;
+                }
+            }
+            else
+            {
+                result = ER_IM;
+                printLog(first, result, output);
+                break;
             }
         }
         else
