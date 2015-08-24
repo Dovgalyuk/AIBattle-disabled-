@@ -86,6 +86,10 @@ public:
             return "Wrong format";
         case RR_WR:
             return "Wrong range";
+        case RR_OK:
+            return "OK";
+        default:
+            return "Unknown";
         }
     }
 
@@ -255,10 +259,7 @@ public:
 
     InStream& operator >>(std::string& value);
 
-    template<class T> InStream& operator>>(const ValueInBounds<T> &val)
-    {
-    }
-
+    template<class T> InStream& operator>>(const ValueInBounds<T> &val);
 };
 
 #endif
