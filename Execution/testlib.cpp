@@ -262,7 +262,7 @@ int InStream::readInteger()
     return int(value);
 }
 
-int InStream::readUnsignedInteger()
+unsigned int InStream::readUnsignedInteger()
 {
     if (seekEof())
     {
@@ -311,7 +311,7 @@ InStream::~InStream()
     reader.close();
 }
 
-template<> InStream& InStream::operator >><int>(const ValueInBounds<int> &val)
+template<> InStream& InStream::operator >> <int>(const ValueInBounds<int> &val)
 {
     int streamValue = this->readInteger();
 
@@ -330,8 +330,7 @@ template<> InStream& InStream::operator >><int>(const ValueInBounds<int> &val)
 
 }
 
-template<> InStream& InStream::operator>><long long>(
-        const ValueInBounds<long long> &val)
+template<> InStream& InStream::operator>><long long>(const ValueInBounds<long long> &val)
 {
     long long streamValue = this->readLong();
 
@@ -349,8 +348,7 @@ template<> InStream& InStream::operator>><long long>(
     return *this;
 }
 
-template<> InStream& InStream::operator>><unsigned int>(
-        const ValueInBounds<unsigned int> &val)
+template<> InStream& InStream::operator>><unsigned int>(const ValueInBounds<unsigned int> &val)
 {
     unsigned int streamValue = this->readUnsignedInteger();
 

@@ -238,9 +238,9 @@ private:
     int readInteger();
 
     /*
-     * Reads new int. Ignores white-spaces
+     * Reads new unsigned int. Ignores white-spaces
      */
-    int readUnsignedInteger();
+    unsigned int readUnsignedInteger();
 
     /*
      * Reads new long long value. Ignores white-spaces
