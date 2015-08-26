@@ -43,6 +43,14 @@ inline bool isBlanks(C c)
     return (c == LF || c == CR || c == SPACE || c == TAB);
 }
 
+template <class T>
+std::string numberToString(T value)
+{
+    std::ostringstream out;
+    out << value;
+    return out.str();
+}
+
 enum ReadResult
 {
     RR_OK, // All right
@@ -105,8 +113,7 @@ struct ValueInBounds
     T &value;
     T min, max;
 
-    ValueInBounds(T &v, T minBound, T maxBound) :
-            value(v)
+    ValueInBounds(T &v, T minBound, T maxBound) : value(v)
     {
         min = minBound;
         max = maxBound;
@@ -118,6 +125,55 @@ struct ValueInBounds
     }
 };
 
+template<class T>
+struct ValueInRange
+{
+    T &value;
+    T *range;
+    unsigned int size;
+
+
+    ValueInRange(T &v, T *r, unsigned int s) : value(v), size(s), range(NULL)
+    {
+        range = new T[size];
+        std::copy(r, r + size, range);
+    }
+
+    ~ValueInRange()
+    {
+        delete[] range;
+        range = NULL;
+    }
+
+    bool isValueInRange(T streamValue) const
+    {
+        bool isFail = true;
+
+        for (unsigned int i = 0; i < size; ++i)
+            if (range[i] == streamValue)
+            {
+                isFail = false;
+                break;
+            }
+
+        return !isFail;
+    }
+
+    std::string getRangeTextPresentation() const
+    {
+        std::string result = "[ ";
+        for (unsigned int i = 0; i < size; ++i)
+        {
+            result += numberToString(range[i]);
+            if (i != size - 1)
+                result += ", ";
+        }
+
+        result += " ]";
+        return result;
+    }
+};
+
 class StringInputStreamReader
 {
 private:
@@ -125,8 +181,7 @@ private:
     size_t pos;
 
 public:
-    StringInputStreamReader(const std::string& content)
-         :  s(content), pos(0)
+    StringInputStreamReader(const std::string& content) :  s(content), pos(0)
     {
         // No operations.
     }
@@ -260,6 +315,8 @@ public:
     InStream& operator >>(std::string& value);
 
     template<class T> InStream& operator>>(const ValueInBounds<T> &val);
+    template<class T> InStream& operator>>(const ValueInRange<T> &val);
+
 };
 
 #endif

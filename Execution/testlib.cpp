@@ -366,6 +366,50 @@ template<> InStream& InStream::operator>><unsigned int>(const ValueInBounds<unsi
     return *this;
 }
 
+template<> InStream& InStream::operator>> <char>(const ValueInRange<char> &val)
+{
+    std::string streamValue = this->readString();
+    if (streamValue.size() == 0 || streamValue.size() > 1)
+    {
+        std::ostringstream out;
+        out << "Get " << streamValue << ", expected char";
+        throw ReadCheckerException(RR_WF, out.str());
+    }
+    else
+    {
+        if (val.isValueInRange(streamValue.at(0)))
+        {
+            val.value = streamValue.at(0);
+        }
+        else
+        {
+            std::ostringstream out;
+            out << "Expected value in range " << val.getRangeTextPresentation() << ", get " << streamValue;
+            throw ReadCheckerException(RR_WR, out.str());
+        }
+    }
+
+    return *this;
+}
+
+template<> InStream& InStream::operator>> <int>(const ValueInRange<int> &val)
+{
+    int streamValue = this->readInteger();
+
+    if (val.isValueInRange(streamValue))
+    {
+        val.value = streamValue;
+    }
+    else
+    {
+        std::ostringstream out;
+        out << "Expected value in range " << val.getRangeTextPresentation() << ", get " << streamValue;
+        throw ReadCheckerException(RR_WR, out.str());
+    }
+
+    return *this;
+}
+
 InStream& InStream::operator >>(int& value)
 {
     value = this->readInteger();
