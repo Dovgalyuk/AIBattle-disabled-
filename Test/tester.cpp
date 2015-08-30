@@ -8,6 +8,7 @@ int main()
     int k;
     int r1[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
+
     try
     {
         in >> ValueInRange<char>(p, r, 3) >> ValueInRange<int>(k, r1, 10);

@@ -145,7 +145,7 @@ struct ValueInRange
         range = NULL;
     }
 
-    bool isValueInRange(T streamValue) const
+    bool isValueInRange (T streamValue) const
     {
         bool isFail = true;
 
@@ -251,7 +251,7 @@ private:
     char nextChar();
 
     /* Returns current character and moves pointer one character forward. */
-    char readChar();
+    char readSym();
 
     /* Checks that current position is EOF. If not it doesn't move stream pointer. */
     bool eof();
@@ -302,6 +302,11 @@ private:
      */
     long long readLong();
 
+    /*
+     * Reads new char, Ignores white-spaces
+     */
+    char readChar();
+
 public:
     InStream(const std::string &content);
     ~InStream();
@@ -313,6 +318,8 @@ public:
     InStream& operator >>(long long & value);
 
     InStream& operator >>(std::string& value);
+
+    InStream& operator >>(char &value);
 
     template<class T> InStream& operator>>(const ValueInBounds<T> &val);
     template<class T> InStream& operator>>(const ValueInRange<T> &val);

@@ -18,7 +18,7 @@ char InStream::nextChar()
     return char(reader.nextChar());
 }
 
-char InStream::readChar()
+char InStream::readSym()
 {
     return nextChar();
 }
@@ -301,6 +301,20 @@ long long InStream::readLong()
 }
 
 
+char InStream::readChar()
+{
+    std::string streamValue = this->readString();
+    if (streamValue.size() == 0 || streamValue.size() > 1)
+    {
+        std::ostringstream out;
+        out << "Get " << streamValue << ", expected char";
+        throw ReadCheckerException(RR_WF, out.str());
+    }
+
+    return streamValue.at(0);
+}
+
+
 InStream::InStream(const std::string &content)
 {
     reader = StringInputStreamReader(content);
@@ -368,25 +382,17 @@ template<> InStream& InStream::operator>><unsigned int>(const ValueInBounds<unsi
 
 template<> InStream& InStream::operator>> <char>(const ValueInRange<char> &val)
 {
-    std::string streamValue = this->readString();
-    if (streamValue.size() == 0 || streamValue.size() > 1)
+    char streamValue = this->readChar();
+
+    if (val.isValueInRange(streamValue))
     {
-        std::ostringstream out;
-        out << "Get " << streamValue << ", expected char";
-        throw ReadCheckerException(RR_WF, out.str());
+        val.value = streamValue;
     }
     else
     {
-        if (val.isValueInRange(streamValue.at(0)))
-        {
-            val.value = streamValue.at(0);
-        }
-        else
-        {
-            std::ostringstream out;
-            out << "Expected value in range " << val.getRangeTextPresentation() << ", get " << streamValue;
-            throw ReadCheckerException(RR_WR, out.str());
-        }
+        std::ostringstream out;
+        out << "Expected value in range " << val.getRangeTextPresentation() << ", get " << streamValue;
+        throw ReadCheckerException(RR_WR, out.str());
     }
 
     return *this;
@@ -431,5 +437,11 @@ InStream& InStream::operator >>(long long & value)
 InStream& InStream::operator >>(std::string& value)
 {
     value = this->readString();
+    return *this;
+}
+
+InStream& InStream::operator>>(char &value)
+{
+    value = this->readChar();
     return *this;
 }
