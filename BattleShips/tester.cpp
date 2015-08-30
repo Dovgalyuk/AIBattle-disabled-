@@ -61,7 +61,6 @@ void initField(int player)
     result = runProcess(programs[player], "1\n", output, 1000, 64000);
     if (result == ER_OK)
     {
-        //std::istringstream ins(output);
         InStream ins(output);
         for (int i = 0 ; i < ships ; ++i)
         {
@@ -191,8 +190,7 @@ int main(int argc, char **argv)
         std::string output;
         result = runProcess(programs[player], outs.str(), output, 1000, 64000);
         if (result == ER_OK)
-        {e
-            //std::istringstream ins(output);
+        {
             InStream ins(output);
             int row, col;
             try
