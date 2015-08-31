@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "execution.h"
+#include "testlib.h"
 
 const int size = 6;
 
@@ -94,12 +95,28 @@ int main(int argc, char **argv)
             outs.str(), output, 1000, 64000);
         if (result == ER_OK)
         {
-            std::istringstream ins(output);
+            InStream ins(output);
+
             int rowcol;
-            ins >> rowcol;
-            if (rowcol > 0 && rowcol <= size
-                && ((first && field[row-1][rowcol-1])
-                    || (!first && field[rowcol-1][col-1])))
+            try
+            {
+                ins >> ValueInBounds<int>(rowcol, 1, size);
+            }
+            catch (ReadCheckerException &exception)
+            {
+                result = ER_IM;
+
+                std::ostringstream outs;
+                outs << output << std::endl << exception.getReadResultText() << ": " << exception.what() << std::endl;
+
+                printLog(first, result, outs.str());
+                break;
+            }
+
+            if  (
+                    (first && field[row-1][rowcol-1]) ||
+                    (!first && field[rowcol-1][col-1])
+                )
             {
 
                 if (first)
