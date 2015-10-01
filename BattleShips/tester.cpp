@@ -2,6 +2,7 @@
 #include <iostream>
 #include <numeric>
 #include "execution.h"
+#include "testlib.h"
 
 const int size = 7;
 const int ships = 7;
@@ -56,24 +57,37 @@ void initField(int player)
 {
     ExecutionResult result = ER_OK;
     std::string output;
+    char dir[] = {'H', 'V'};
     result = runProcess(programs[player], "1\n", output, 1000, 64000);
     if (result == ER_OK)
     {
-        std::istringstream ins(output);
+        InStream ins(output);
         for (int i = 0 ; i < ships ; ++i)
         {
             int x, y;
             char v = 'H';
-            ins >> y >> x;
-            if (sizes[i] != 1)
-                ins >> v;
-            if (x < 1 || x > 7 || y < 1 || y > 7 || (v != 'H' && v != 'V'))
+
+            try
+            {
+                ins >> ValueInBounds<int>(y, 1, 7) >> ValueInBounds<int>(x, 1, 7);
+                if (sizes[i] != 1)
+                    ins >> ValueInRange<char>(v, dir, 2);
+            }
+            catch (ReadCheckerException &exception)
             {
                 result = ER_IM;
-                printLog(player == 0, result, "invalid ships placement: " + output + "\nEND\n");
+
+                std::ostringstream outs;
+                outs    << std::string("invalid ships placement: ") << std::endl << output << std::endl
+                        << exception.getReadResultText() << ": " << exception.what() << std::endl
+                        << std::string("END") << std::endl;
+
+                printLog(player == 0, result, outs.str());
                 error = true;
                 break;
+
             }
+
             int dx = 1, dy = 0;
             int szx = sizes[i];
             int szy = 1;
@@ -177,15 +191,26 @@ int main(int argc, char **argv)
         result = runProcess(programs[player], outs.str(), output, 1000, 64000);
         if (result == ER_OK)
         {
-            std::istringstream ins(output);
+            InStream ins(output);
             int row, col;
-            ins >> row >> col;
+            try
+            {
+                ins >> ValueInBounds<int>(row, 1, 7) >> ValueInBounds<int>(col, 1, 7);
+            }
+            catch (ReadCheckerException &exception)
+            {
+                result = ER_IM;
+                std::ostringstream outs;
+                outs << output << std::endl << exception.getReadResultText() << ": " << exception.what() << std::endl;
+
+                printLog(player == 0, result, outs.str());
+                break;
+            }
+
             --row;
             --col;
-            if (row >= 0 && row < size
-                && col >= 0 && col < size
-                && (fields[1 - player][row][col] == Empty
-                    || fields[1 - player][row][col] == Ship))
+            if (    fields[1 - player][row][col] == Empty ||
+                    fields[1 - player][row][col] == Ship)
             {
                 printLog(player == 0, result, output);
 

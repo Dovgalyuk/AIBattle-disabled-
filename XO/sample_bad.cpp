@@ -71,6 +71,18 @@ int main()
     for (int i = 0 ; i < 20 ; ++i)
         x[i] = 5;
 #endif
+#if 0
+    // wrong data format
+    std::cout << "One One\n";
+#endif
+#if 0
+    // wrong data format
+    std::cout << "0 0\n";
+#endif
+#if 0
+    // wrong data format
+    std::cout << "4 4\n";
+#endif
 
     srand((unsigned int)time(0));
 
