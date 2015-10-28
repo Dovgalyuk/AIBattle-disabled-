@@ -22,7 +22,11 @@
 		else
 		{
 			updateComment($postCommentId, $_POST['userComment']);
-		}
+        }
+
+        header("Location: comments.php?news=$postNewsId");
+
+        exit;
 	}
 	
 	if (isset($_POST['delete']))
@@ -33,10 +37,6 @@
 ?>
 
 <script>
-	function loadCommentData(newsId, commentId)
-	{
-		$('#dataContainer').load('comments.php?news=' + newsId + '&comment=' + commentId);
-	}
 	
 	function deleteComment(newsId, commentId)
 	{
@@ -47,15 +47,17 @@
 				'commentId' : commentId,
 				'delete'	: true
 			}
-		);
+		).done(function() {
+            window.location.reload()
+        })
 		
-		loadCommentData(newsId, -1);
 	}
-	
-	function editComment(newsId, commentId)
-	{
-		loadCommentData(newsId, commentId);
-	}
+
+    function editComment(newsId, commentId)
+    {
+	    window.location = 'comments.php?news=' + newsId + '&comment=' + commentId;
+    }
+
 </script>
 
     <div class = "container content" id = "dataContainer">
@@ -85,23 +87,34 @@
 				<?php echo $comment['date']; ?>
 			</div>
 			<?php
-/* enable editing later
-				if ($comment['user'] == getActiveUserID() || isAdmin() || isModerator())
+				if (isAdmin() || isModerator() || getActiveUser() === $comment['user'])
 				{
-			?>
-					<button type = "submit" name = "submit" onclick = "editComment(<?php echo $newsId.",".$comment['id']; ?>); return false;" class = "btn btn-default">Изменить</button>
+?>
+<div class="btn-group" role="group">
+<button type = "submit" name = "edit" onclick = "editComment(<?php echo $newsId.",".$comment['id']; ?>); return false;" class = "btn btn-default<?php
+                    if ($comment['id'] == $commentId) 
+                        echo " disabled";
+?>">Редактировать</button>
 			<?php
 				}
+
 			?>
 			<?php
 				if (isAdmin() || isModerator())
 				{
 			?>
-					<button type = "submit" name = "delete" onclick = "deleteComment(<?php echo $newsId.",".$comment['id']; ?>); return false;" class = "btn btn-default">Удалить</button>
+					<button type = "submit" name = "delete" onclick = "deleteComment(<?php echo $newsId.",".$comment['id']; ?>); return false;" class = "btn btn-danger">Удалить</button>
+			<?php
+                }
+                if (isAdmin() || isModerator() || getActiveUser() === $comment['user'] )
+				{
+?>
+</div>
 			<?php
 				}
-*/
+
 			?>
+
 		</div>
 	<?php
 		}
