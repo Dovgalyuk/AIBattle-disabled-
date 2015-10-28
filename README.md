@@ -8,7 +8,18 @@ How to build
 
 Build it with CMake!
 
-If you want to use website, copy site/ to webserver folder, copy build/Execution/libexecution.a and Execution/execution.h to webserver/libs and webserver/includes respectively
+If you want to use web interface
+--------------------------
+
+ - Copy site/ to webserver folder
+
+ - Open install.php in your web browser and follow the instructions
+
+ - Copy build/Execution/libexecution.a to webserver/libs
+
+ - Copy Execution/execution.h and Execution/testlib.h to webserver/includes
+  
+  
 
 The system can work on Windows and Linux hosts.
 
@@ -17,3 +28,4 @@ Dependencies
 ------------
 
 On Linux install fakechroot and fakeroot.
+

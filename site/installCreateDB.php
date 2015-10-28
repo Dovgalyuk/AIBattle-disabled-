@@ -220,7 +220,7 @@
 		
 		logOff();
 		
-		echo '<meta http-equiv="refresh" content="0; url=redirectIndex.php?reason=Система установлена! Не забудьте скопировать файлы Execution.lib и execution.h в подкаталоги libs и includes. А так же удалить installCreateDB.php!">';
+		echo '<meta http-equiv="refresh" content="0; url=redirectIndex.php?reason=Система установлена! Не забудьте скопировать файлы Execution.lib, execution.h и testlib.h в подкаталоги libs и includes. А так же удалить installCreateDB.php!">';
 		exit();
 		
 	}
