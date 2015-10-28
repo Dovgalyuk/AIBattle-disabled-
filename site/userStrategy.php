@@ -19,6 +19,7 @@
 		form.append(fileInputName, $('#' + fileInputName)[0].files[0]);
 		form.append('formInputName', fileInputName);
 		form.append('tournamentId', tournamentId);
+        form.append('language', $("#uploadGameLanguage").val());
 				
 		$.ajax({
 			url: 'jqueryUserStrategyDownloadStrategy.php',
@@ -61,7 +62,17 @@
 	<div class="form-group">
 		<label for="uploadGameFile">Загрузка стратегии:</label>
 		<input type="file" id="uploadGameFile">
-	</div>
+    </div>
+    <div class="form-group">
+        <label for="uploadGameLanguage">Язык программирования</label>
+        <select class="form-control" id="uploadGameLanguage">
+            <option value="auto" selected>Автоматически</option>
+            <option value="cpp">C++ (GCC)</option>
+            <option value="cpp">C++ (Microsoft Visual Studio)</option>
+            <option value="pas">Pascal (Free Pascal)</option>
+            <option value="py">Python 3</option>
+        </select>
+    </div>
 	<button type="submit" class="btn btn-default" onclick = "downloadUserStrategy(<?php echo '\'uploadGameFile\''.','.$id.','.$tournamentId; ?>); return false;">Загрузить</button>
 </form>
 <?php

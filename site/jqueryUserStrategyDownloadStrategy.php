@@ -1,7 +1,9 @@
 <?php
 	include_once('procedures.php');
 		
-	$id = intval($_POST['gameId']);
+    $id = intval($_POST['gameId']);
+
+    $lang = (isset($_POST['language']))?($_POST['language']):"auto";    
 	
 	$link = getDBConnection();
 	if (mysqli_select_db($link, getDBName()))
@@ -26,7 +28,10 @@
             $compileArr = array('cpp' => './gcc.sh', 'c' => './gcc.sh', 'py' => './python.sh');
 		
 		$output = array();
-		$execValue = 0;
+        $execValue = 0;
+
+        if (isset($compileArr[$lang]))
+            $extension = $lang;
 		
 		if ($compileArr[$extension])
 			exec($compileArr[$extension]." $strategy", $output, $execValue);
