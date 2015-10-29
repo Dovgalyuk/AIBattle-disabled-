@@ -15,7 +15,7 @@
 </thead>
 <tbody>
 <?php
-    $users = getTournamentsList();
+    $users = getUsersList();
     foreach ($users as $user)
     {
         if ($user['group'] == "banned")
